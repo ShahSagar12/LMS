@@ -1,0 +1,143 @@
+package com.lms.daoimpl;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import com.lms.dao.BookDAO;
+import com.lms.dbutils.MySqlConnector;
+import com.lms.entity.Book;
+
+
+public class BookDAOImpl implements BookDAO {
+	private static final Logger LOGGER = Logger.getLogger(BookDAOImpl.class.getName());
+
+	@Override
+	public boolean save(Book book) throws SQLException {
+		boolean saved=false;
+		Connection connection=MySqlConnector.connectToDB();
+		String sql="INSERT INTO book(booktitle,bookauthor,bookpublisher,publishedyear,totalpages,bookstatus,userid)VALUES(?,?,?,?,?,?,?)";
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			preparedStatement.setString(1, book.getBookTitle());
+			preparedStatement.setString(2, book.getBookAuthor());
+			preparedStatement.setString(3, book.getPublisher());
+			preparedStatement.setString(4, book.getPublishedYear());
+			preparedStatement.setInt(5, book.getnOfPages());
+			preparedStatement.setString(6, book.getBookStatusType());
+			preparedStatement.setInt(7, book.getUserId());
+			preparedStatement.executeUpdate();
+			saved=true;
+		}catch(Exception ex) {
+			LOGGER.info("Error Saving book to Database "+ex.getMessage());
+		}finally {
+			connection.close();
+		}
+		return saved;
+	}
+
+	@Override
+	public List<Book> findAll() throws SQLException {
+		List<Book> list=new ArrayList<>();
+		Connection connection=MySqlConnector.connectToDB();
+		String sql="SELECT * FROM book";
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			ResultSet resultSet=preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				Book book=new Book();
+				book.setBookId(resultSet.getInt("bookId"));
+				book.setBookTitle(resultSet.getString("booktitle"));
+				book.setBookAuthor(resultSet.getString("bookauthor"));
+				book.setPublisher(resultSet.getString("bookpublisher"));
+				book.setPublishedYear(resultSet.getString("publishedyear"));
+				book.setnOfPages(resultSet.getInt("totalpages"));
+				book.setUserId(resultSet.getInt("userid"));
+				book.setBookStatusType(resultSet.getString("bookstatus"));
+				list.add(book);
+			}
+		} catch (Exception ex) {
+			LOGGER.info("Error Getting All book "+ex.getMessage());
+		}finally {
+			connection.close();
+		}
+
+		return list;
+	}
+
+	@Override
+	public Book get(int id) throws SQLException {
+		Book book=new Book();
+		Connection connection=MySqlConnector.connectToDB();
+		String sql="SELECT * FROM book WHERE bookid=?";
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			preparedStatement.setInt(1,id);
+			ResultSet resultSet=preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				book.setBookId(resultSet.getInt("bookId"));
+				book.setBookTitle(resultSet.getString("booktitle"));
+				book.setBookAuthor(resultSet.getString("bookauthor"));
+				book.setPublisher(resultSet.getString("bookpublisher"));
+				book.setPublishedYear(resultSet.getString("publishedyear"));
+				book.setnOfPages(resultSet.getInt("totalpages"));
+				book.setUserId(resultSet.getInt("userid"));
+				book.setBookStatusType(resultSet.getString("bookstatus"));
+			}
+		} catch (Exception ex) {
+			LOGGER.info("Error getting book by id "+ex.getMessage());
+		}finally {
+			connection.close();
+		}
+		return book;
+
+	}
+
+	@Override
+	public boolean update(Book book) throws SQLException {
+		boolean exists=false;
+		Connection connection=MySqlConnector.connectToDB();
+		String sql="UPDATE book SET booktitle=?, bookauthor=?, bookpublisher=?, publishedyear=?, totalpages=?, bookstatus=?, userid=? where bookid="+book.getBookId();
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			preparedStatement.setString(1, book.getBookTitle());
+			preparedStatement.setString(2, book.getBookAuthor());
+			preparedStatement.setString(3, book.getPublisher());
+			preparedStatement.setString(4, book.getPublishedYear());
+			preparedStatement.setInt(5, book.getnOfPages());
+			preparedStatement.setString(6, book.getBookStatusType());
+			preparedStatement.setInt(7, book.getUserId());
+			preparedStatement.executeUpdate();
+			exists=true;
+		}catch(Exception ex) {
+			LOGGER.info("ERROR:BOOK UPDATE "+ex.getMessage());
+		}finally {
+			connection.close();
+		}
+		return exists;
+	}
+
+	@Override
+	public boolean delete(int id) throws SQLException {
+		boolean exists=false;
+		Connection connection=MySqlConnector.connectToDB();
+		String sql="DELETE book WHERE id=?";
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			preparedStatement.setInt(1,id);
+			preparedStatement.executeQuery();
+			exists=true;
+		}catch(Exception ex) {
+			LOGGER.info("ERROR:Book delete :"+ex.getMessage());
+		}finally {
+			connection.close();
+		}
+		return exists;
+
+	}
+
+}
