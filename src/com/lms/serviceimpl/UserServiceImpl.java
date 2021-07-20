@@ -31,7 +31,11 @@ public class UserServiceImpl implements UserService {
 		} catch (SQLException e) {
 			LOGGER.info("Error :"+e.getMessage());
 		}
-		return users.get(0);
+		if(users.size()>0) {
+			return users.get(0);	
+		}
+		return null;
+		
 	}
 
 	

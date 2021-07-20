@@ -16,6 +16,7 @@
 			<div class="col-md-4 offset-md-4">
 				<div class="login-form bg-light mt-4 p-4">
 					<form action="/lms/login" method="post" class="row g-3">
+					<p>Message: ${errorMessage}</p>
 						<h4>Welcome Back</h4>
 						<div class="col-12">
 							<label>Email</label> <input type="text" name="email"

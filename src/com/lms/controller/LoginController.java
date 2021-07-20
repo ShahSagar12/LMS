@@ -50,7 +50,9 @@ public class LoginController extends HttpServlet{
 				break;
 			}
 		}else {
-			resp.sendError(404);
+			req.setAttribute("errorMessage", "user or password not matched");
+			req.getRequestDispatcher("/login.jsp").forward(req, resp);
+			
 		}
 	}
 
