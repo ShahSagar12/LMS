@@ -41,7 +41,7 @@
 					<hr class="mt-4">
 					<div class="col-12">
 						<p class="text-center mb-0">
-							Have not account yet? <a href="/Business_Organization/signup">Signup</a>
+							Have not account yet? <a href="/lms/signup">Signup</a>
 						</p>
 					</div>
 				</div>
@@ -49,9 +49,6 @@
 		</div>
 	</div>
 
-	<!-- Bootstrap JS -->
-	<script
-		src="https://www.markuptag.com/bootstrap/5/js/bootstrap.bundle.min.js"></script>
-
+	
 </body>
 </html>

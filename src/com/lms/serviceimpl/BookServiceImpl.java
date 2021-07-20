@@ -2,13 +2,17 @@ package com.lms.serviceimpl;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.lms.dao.BookDAO;
 import com.lms.daoimpl.BookDAOImpl;
 import com.lms.entity.Book;
+import com.lms.exception.AlreadyTakenSixBooksException;
 import com.lms.service.BookService;
 
 public class BookServiceImpl implements BookService{
+	
+	private static final Logger LOGGER = Logger.getLogger(BookServiceImpl.class.getName());
 	
 	private BookDAO bookDao=new BookDAOImpl();
 
@@ -41,6 +45,7 @@ public class BookServiceImpl implements BookService{
 		
 		return bookDao.delete(id);
 	}
-	
 
+
+	
 }

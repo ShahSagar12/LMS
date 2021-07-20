@@ -37,7 +37,7 @@ public class LoginController extends HttpServlet{
 		if(authenticatedUser!=null) {
 			switch (RoleTypes.roles.get(authenticatedUser.getRoleid())) {
 			case "Admin":
-				resp.sendRedirect("/lms/books");
+				resp.sendRedirect("/lms/book");
 				HttpSession session = req.getSession();
 				session.setAttribute("authenticatedUser", authenticatedUser);
 				break;

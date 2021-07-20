@@ -10,9 +10,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lms.daoimpl.UserDAOImpl;
 import com.lms.entity.Role;
 import com.lms.entity.User;
+import com.lms.model.dtos.UserDto;
 import com.lms.service.RoleService;
 import com.lms.service.UserService;
 import com.lms.serviceimpl.RoleServiceImpl;
@@ -36,14 +38,16 @@ public class SignupController extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
+			ObjectMapper mapper = new ObjectMapper();
+			UserDto userDto = mapper.readValue(req.getInputStream(), UserDto.class);
 			UserService userService=new UserServiceImpl();
 			RoleService roleService=new RoleServiceImpl();
 			User user=new User();
-			user.setFirstName(req.getParameter("firstname"));
-			user.setLastName(req.getParameter("lastname"));
-			user.setEmail(req.getParameter("email"));
-			user.setUserPassword(req.getParameter("password"));
-			Role role = roleService.findByRole(req.getParameter("role"));
+			user.setFirstName(userDto.getFirstName());
+			user.setLastName(userDto.getLastName());
+			user.setEmail(userDto.getEmail());
+			user.setUserPassword(userDto.getPassword());
+			Role role = roleService.findByRole(userDto.getRegisterAs());
 			user.setRoleid(role.getRoleid());
 			userService.register(user);
 			resp.sendRedirect("/lms/login");

@@ -11,4 +11,5 @@ public interface BookService {
 	Book get(int id) throws SQLException;
 	boolean update(Book book) throws SQLException;
 	boolean delete(int id) throws SQLException;
+//	boolean alreadyTakenSufficientBooks(Integer userId);
 }

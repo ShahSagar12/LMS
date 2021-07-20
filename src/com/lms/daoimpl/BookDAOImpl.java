@@ -20,7 +20,7 @@ public class BookDAOImpl implements BookDAO {
 	public boolean save(Book book) throws SQLException {
 		boolean saved=false;
 		Connection connection=MySqlConnector.connectToDB();
-		String sql="INSERT INTO book(booktitle,bookauthor,bookpublisher,publishedyear,totalpages,bookstatus,userid)VALUES(?,?,?,?,?,?,?)";
+		String sql="INSERT INTO book(booktitle,bookauthor,bookpublisher,publishedyear,totalpages,bookqty,adminid)VALUES(?,?,?,?,?,?,?)";
 		try {
 			PreparedStatement preparedStatement=connection.prepareStatement(sql);
 			preparedStatement.setString(1, book.getBookTitle());
@@ -28,8 +28,8 @@ public class BookDAOImpl implements BookDAO {
 			preparedStatement.setString(3, book.getPublisher());
 			preparedStatement.setString(4, book.getPublishedYear());
 			preparedStatement.setInt(5, book.getnOfPages());
-			preparedStatement.setString(6, book.getBookStatusType());
-			preparedStatement.setInt(7, book.getUserId());
+			preparedStatement.setInt(6, book.getBookQty());
+			preparedStatement.setInt(7, book.getAdminId());
 			preparedStatement.executeUpdate();
 			saved=true;
 		}catch(Exception ex) {
@@ -56,8 +56,8 @@ public class BookDAOImpl implements BookDAO {
 				book.setPublisher(resultSet.getString("bookpublisher"));
 				book.setPublishedYear(resultSet.getString("publishedyear"));
 				book.setnOfPages(resultSet.getInt("totalpages"));
-				book.setUserId(resultSet.getInt("userid"));
-				book.setBookStatusType(resultSet.getString("bookstatus"));
+				book.setBookQty(resultSet.getInt("bookqty"));
+				book.setAdminId(resultSet.getInt("adminid"));
 				list.add(book);
 			}
 		} catch (Exception ex) {
@@ -84,9 +84,9 @@ public class BookDAOImpl implements BookDAO {
 				book.setBookAuthor(resultSet.getString("bookauthor"));
 				book.setPublisher(resultSet.getString("bookpublisher"));
 				book.setPublishedYear(resultSet.getString("publishedyear"));
+				book.setBookQty(resultSet.getInt("bookqty"));
 				book.setnOfPages(resultSet.getInt("totalpages"));
-				book.setUserId(resultSet.getInt("userid"));
-				book.setBookStatusType(resultSet.getString("bookstatus"));
+				book.setAdminId(resultSet.getInt("adminid"));
 			}
 		} catch (Exception ex) {
 			LOGGER.info("Error getting book by id "+ex.getMessage());
@@ -101,16 +101,16 @@ public class BookDAOImpl implements BookDAO {
 	public boolean update(Book book) throws SQLException {
 		boolean exists=false;
 		Connection connection=MySqlConnector.connectToDB();
-		String sql="UPDATE book SET booktitle=?, bookauthor=?, bookpublisher=?, publishedyear=?, totalpages=?, bookstatus=?, userid=? where bookid="+book.getBookId();
+		String sql="UPDATE book SET booktitle=?, bookauthor=?, bookpublisher=?, publishedyear=?,bookqty=?,totalpages=?, adminid=? where bookid="+book.getBookId();
 		try {
 			PreparedStatement preparedStatement=connection.prepareStatement(sql);
 			preparedStatement.setString(1, book.getBookTitle());
 			preparedStatement.setString(2, book.getBookAuthor());
 			preparedStatement.setString(3, book.getPublisher());
 			preparedStatement.setString(4, book.getPublishedYear());
-			preparedStatement.setInt(5, book.getnOfPages());
-			preparedStatement.setString(6, book.getBookStatusType());
-			preparedStatement.setInt(7, book.getUserId());
+			preparedStatement.setInt(5, book.getBookQty());
+			preparedStatement.setInt(6, book.getnOfPages());
+			preparedStatement.setInt(7, book.getAdminId());
 			preparedStatement.executeUpdate();
 			exists=true;
 		}catch(Exception ex) {
@@ -137,7 +137,6 @@ public class BookDAOImpl implements BookDAO {
 			connection.close();
 		}
 		return exists;
-
 	}
 
 }

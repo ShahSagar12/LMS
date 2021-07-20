@@ -29,6 +29,10 @@ public class StudentDashboardController extends HttpServlet{
 			resp.sendRedirect("404Error.jsp");
 		}
 	}
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+	}
 
 	
 }
