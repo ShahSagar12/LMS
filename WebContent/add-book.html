@@ -43,7 +43,7 @@
 								Title</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" id="add-book-title"
-									name="book-title" required>
+									 required>
 							</div>
 						</div>
 						<div class="row mb-3">
@@ -51,7 +51,7 @@
 								Author</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" id="add-book-author"
-									name="book-author" required>
+									 required>
 							</div>
 						</div>
 						<div class="row mb-3">
@@ -59,7 +59,7 @@
 								Publisher</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" id="add-book-publisher"
-									name="book-publisher" required>
+									 required>
 							</div>
 						</div>
 						<div class="row mb-3">
@@ -67,7 +67,7 @@
 								Year</label>
 							<div class="col-sm-10">
 								<div class='input-group date'>
-									<input type='text' class="form-control" name="published-year"
+									<input type='text' class="form-control" 
 										id='add-published-year' required /> <span
 										class="input-group-addon"> <span
 										class="glyphicon glyphicon-calendar"></span>
@@ -80,19 +80,19 @@
 								Of Pages</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" id="add-no-Of-Pages"
-									name="no-Of-Pages">
+									>
 							</div>
 						</div>
 						<div class="row mb-3">
 							<label for="no-Of-Pages" class="col-sm-2 col-form-label">Quantity</label>
 							<div class="col-sm-10">
 								<input type="number" class="form-control" id="add-book-qty"
-									name="add-book-qty">
+									>
 							</div>
 						</div>
 					</div>
 					<div class="modal-footer">
-						<input type="hidden" id="book-id" name="book-id" />
+						<input type="hidden" id="book-id"  />
 						<button type="button" class="btn btn-secondary"
 							data-bs-dismiss="modal">Close</button>
 						<button type="submit" class="btn btn-primary"
@@ -121,7 +121,7 @@
 								Title</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" id="book-title"
-									name="book-title" required>
+									 required>
 							</div>
 						</div>
 						<div class="row mb-3">
@@ -129,7 +129,7 @@
 								Author</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" id="book-author"
-									name="book-author" required>
+									 required>
 							</div>
 						</div>
 						<div class="row mb-3">
@@ -137,7 +137,7 @@
 								Publisher</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" id="book-publisher"
-									name="book-publisher" required>
+									 required>
 							</div>
 						</div>
 						<div class="row mb-3">
@@ -145,7 +145,7 @@
 								Year</label>
 							<div class="col-sm-10">
 								<div class='input-group date'>
-									<input type='text' class="form-control" name="published-year"
+									<input type='text' class="form-control" 
 										id='published-year' required /> <span
 										class="input-group-addon"> <span
 										class="glyphicon glyphicon-calendar"></span>
@@ -158,14 +158,14 @@
 								Of Pages</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" id="no-Of-Pages"
-									name="no-Of-Pages">
+									>
 							</div>
 						</div>
 						<div class="row mb-3">
 							<label for="book-quantity" class="col-sm-2 col-form-label">Book Quantity</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" id="book-quantity"
-									name="book-quantity">
+									>
 							</div>
 						</div>
 						<fieldset class="row mb-3">
@@ -193,7 +193,7 @@
 						</fieldset>
 					</div>
 					<div class="modal-footer">
-						<input type="hidden" id="book-id" name="book-id" />
+						<input type="hidden" id="book-id" />
 						<button type="button" class="btn btn-secondary"
 							data-bs-dismiss="modal">Close</button>
 						<button type="button" class="btn btn-danger" id="btn-delete">Delete</button>

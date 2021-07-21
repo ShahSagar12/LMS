@@ -24,7 +24,9 @@ public class LoginController extends HttpServlet{
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
 		resp.sendRedirect("webapp/login.html");
+
 	}
 
 	@Override
@@ -50,7 +52,9 @@ public class LoginController extends HttpServlet{
 				break;
 			}
 		}else {
-			resp.sendError(404);
+			req.setAttribute("errorMessage", "user or password not matched");
+			req.getRequestDispatcher("/login.html").forward(req, resp);
+			
 		}
 	}
 
