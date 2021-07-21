@@ -18,7 +18,7 @@ import com.lms.entity.User;
 import com.lms.service.BookService;
 import com.lms.serviceimpl.BookServiceImpl;
 
-@WebServlet("/book")
+@WebServlet("/admin-dashboard")
 public class AdminController extends HttpServlet{
 
 	/**
@@ -33,9 +33,9 @@ public class AdminController extends HttpServlet{
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute("authenticatedUser");
 		if(user!=null) {
-			resp.sendRedirect("add-book.jsp");
+			resp.sendRedirect("webapp/admin/admin-dashboard.html");
 		}else {
-			resp.sendRedirect("404Error.jsp");
+			resp.sendRedirect("404Error.html");
 		}
 	}
 
@@ -49,13 +49,16 @@ public class AdminController extends HttpServlet{
 			book.setAdminId(user.getId());
 			System.out.println(book);
 			if(book.getBookId()==0) {
-				bookService.save(book);
+				if(bookService.save(book)) {
+					
+					req.getRequestDispatcher("webapp/admin/add-book.html").forward(req, resp);
+				};
 			}else {
 				bookService.update(book);
 			}
 		}catch(SQLException exp){
 			LOGGER.info("Error on sql :"+exp.getMessage());
 		}
-		resp.sendRedirect("add-book.jsp");
+		
 	}
 }

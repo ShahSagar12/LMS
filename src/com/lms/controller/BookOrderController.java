@@ -27,7 +27,7 @@ public class BookOrderController extends HttpServlet{
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		resp.sendRedirect("student-dashboard.jsp");
+		resp.sendRedirect("webapp/student-dashboard.html");
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class BookOrderController extends HttpServlet{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		resp.sendRedirect("student-dashboard.jsp");
+		resp.sendRedirect("webapp/student-dashboard.html");
 
 	}
 

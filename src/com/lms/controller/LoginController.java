@@ -24,7 +24,7 @@ public class LoginController extends HttpServlet{
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		resp.sendRedirect("login.jsp");
+		resp.sendRedirect("webapp/login.html");
 	}
 
 	@Override
@@ -37,14 +37,14 @@ public class LoginController extends HttpServlet{
 		if(authenticatedUser!=null) {
 			switch (RoleTypes.roles.get(authenticatedUser.getRoleid())) {
 			case "Admin":
-				resp.sendRedirect("/lms/book");
 				HttpSession session = req.getSession();
 				session.setAttribute("authenticatedUser", authenticatedUser);
+				resp.sendRedirect("/lms/admin-dashboard");
 				break;
 			case "User":
-				resp.sendRedirect("/lms/student-dashboard");
 				HttpSession sessions = req.getSession();
 				sessions.setAttribute("authenticatedUser", authenticatedUser);
+				resp.sendRedirect("/lms/student-dashboard");
 				break;
 			default:
 				break;

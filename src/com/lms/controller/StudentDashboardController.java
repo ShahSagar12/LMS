@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import com.lms.entity.User;
 
-@WebServlet("/student-dashboard")
+@WebServlet("/user/student-dashboard")
 public class StudentDashboardController extends HttpServlet{
 
 	/**
@@ -24,9 +24,9 @@ public class StudentDashboardController extends HttpServlet{
 		HttpSession session = req.getSession();
 		User user = (User) session.getAttribute("authenticatedUser");
 		if(user!=null) {
-			resp.sendRedirect("student-dashboard.jsp");
+			resp.sendRedirect("webapp/user/student-dashboard.html");
 		}else {
-			resp.sendRedirect("404Error.jsp");
+			resp.sendRedirect("webapp/404Error.jsp");
 		}
 	}
 	@Override
