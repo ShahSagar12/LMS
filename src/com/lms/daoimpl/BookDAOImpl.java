@@ -22,7 +22,7 @@ public class BookDAOImpl implements BookDAO {
 		Connection connection=MySqlConnector.connectToDB();
 		String sql="INSERT INTO book(booktitle,bookauthor,bookpublisher,publishedyear,totalpages,bookqty,adminid)VALUES(?,?,?,?,?,?,?)";
 		try {
-			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			PreparedStatement preparedStatement=connection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, book.getBookTitle());
 			preparedStatement.setString(2, book.getBookAuthor());
 			preparedStatement.setString(3, book.getPublisher());
@@ -31,6 +31,12 @@ public class BookDAOImpl implements BookDAO {
 			preparedStatement.setInt(6, book.getBookQty());
 			preparedStatement.setInt(7, book.getAdminId());
 			preparedStatement.executeUpdate();
+			ResultSet rs = preparedStatement.getGeneratedKeys();
+	        if (rs.next()) {
+	            int key = rs.getInt(1);
+	            System.out.print("---------------------------id-------------");
+	            System.out.print(key);
+	        }
 			saved=true;
 		}catch(Exception ex) {
 			LOGGER.info("Error Saving book to Database "+ex.getMessage());
