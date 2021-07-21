@@ -1,6 +1,7 @@
 package com.lms.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.lms.daoimpl.UserDAOImpl;
 import com.lms.entity.Book;
 import com.lms.entity.User;
@@ -25,6 +27,7 @@ public class AdminController extends HttpServlet{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private Gson gson = new Gson();
 
 	private static final Logger LOGGER = Logger.getLogger(UserDAOImpl.class.getName());
 
@@ -50,8 +53,15 @@ public class AdminController extends HttpServlet{
 			System.out.println(book);
 			if(book.getBookId()==0) {
 				if(bookService.save(book)) {
-					
-					req.getRequestDispatcher("webapp/admin/add-book.html").forward(req, resp);
+					String userJsonString = this.gson.toJson(book);
+
+			        PrintWriter out = resp.getWriter();
+			        resp.setContentType("application/json");
+			        resp.setCharacterEncoding("UTF-8");
+			        out.print(userJsonString);
+			        out.flush();
+
+//					req.getRequestDispatcher("webapp/admin/add-book.html").forward(req, resp);
 				};
 			}else {
 				bookService.update(book);
