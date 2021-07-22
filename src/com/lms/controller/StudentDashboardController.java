@@ -21,13 +21,9 @@ public class StudentDashboardController extends HttpServlet{
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		HttpSession session = req.getSession();
-		User user = (User) session.getAttribute("authenticatedUser");
-		if(user!=null) {
+		
 			resp.sendRedirect("webapp/user/student-dashboard.html");
-		}else {
-			resp.sendRedirect("webapp/404Error.jsp");
-		}
+		
 	}
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

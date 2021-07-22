@@ -43,18 +43,19 @@ public class LoginController extends HttpServlet{
 		CredentialsDto credentialsDto = mapper.readValue(req.getInputStream(), CredentialsDto.class);
 		User authenticatedUser = userService.isAuthenticated(credentialsDto.getEmail(), credentialsDto.getPassword());
 		if(authenticatedUser!=null) {
+			Map<String,String> map=new HashMap<>();
 			switch (RoleTypes.roles.get(authenticatedUser.getRoleid())) {
+		
 			case "Admin":
-				Map<String,String> map=new HashMap<>();
 				map.put("message","successfully logged");
 				map.put("role","Admin");
 				retunResponse(resp, map);
 //				resp.sendRedirect("/lms/admin-dashboard");
 				break;
 			case "User":
-				HttpSession sessions = req.getSession();
-				sessions.setAttribute("authenticatedUser", authenticatedUser);
-				resp.sendRedirect("/lms/student-dashboard");
+			    map.put("message","successfully logged");
+				map.put("role","User");
+				retunResponse(resp, map);
 				break;
 			default:
 				break;
