@@ -178,8 +178,41 @@
     var baseUrl = window.location.origin +"/lms/"
     
     $(document).ready(
-			function() {
-				$.getJSON(baseUrl+"/users/all", function(data) {
+    		function() {
+    			console.log("my user info");
+        		console.log(localStorage.getItem("userInfo"));
+        		$.ajax({
+    				type : "GET",
+    				url : baseUrl +"/users/all",
+    				headers: { 'user-info':  localStorage.getItem("userInfo")},
+    				success : function(data) {
+    					$table = $("#dataTable");
+    					$.each(data, function(i, user) {
+    						var $tr = $("<tr data-id='"+user.id+"'/>").css(
+    								"cursor", "pointer");
+    						$("<td/>").html(user.firstName).appendTo($tr);
+    						$("<td data-title='name'/>").html(user.lastName)
+    								.appendTo($tr);
+    						$("<td/>").html(user.email).appendTo($tr);
+    						$tr.on("click", function() {
+    							$this = $(this);
+    						});
+    						$tr.appendTo($table);
+
+    					});
+    		
+    				},
+    				error : function(e) {
+    					swal({
+    						text : "Wrong Credentials",
+    						icon:"warning",
+    						button : Ok,
+    						timer : 2000
+    					});
+    				}
+
+    			});
+				/* $.getJSON(baseUrl+"/users/all", function(data) {
 					$table = $("#dataTable");
 					$.each(data, function(i, user) {
 						var $tr = $("<tr data-id='"+user.id+"'/>").css(
@@ -195,7 +228,7 @@
 
 					});
 
-				});
+				}); */
 			});
     
     

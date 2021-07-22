@@ -2,6 +2,8 @@ package com.lms.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -43,10 +45,10 @@ public class LoginController extends HttpServlet{
 		if(authenticatedUser!=null) {
 			switch (RoleTypes.roles.get(authenticatedUser.getRoleid())) {
 			case "Admin":
-				HttpSession session = req.getSession();
-				session.setAttribute("authenticatedUser", authenticatedUser);
-				RequestDispatcher rs = req.getRequestDispatcher("/lms/admin-dashboard");
-	            rs.forward(req, resp);
+				Map<String,String> map=new HashMap<>();
+				map.put("message","successfully logged");
+				map.put("role","Admin");
+				retunResponse(resp, map);
 //				resp.sendRedirect("/lms/admin-dashboard");
 				break;
 			case "User":

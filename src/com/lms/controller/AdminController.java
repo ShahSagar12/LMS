@@ -34,13 +34,12 @@ public class AdminController extends HttpServlet{
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		HttpSession session = req.getSession();
-		User user = (User) session.getAttribute("authenticatedUser");
-		if(user!=null) {
-			resp.sendRedirect("webapp/admin/admin-dashboard.html");
-		}else {
-			resp.sendRedirect("404Error.html");
-		}
+		    String userInfo=req.getHeader("user-info");
+		    if(userInfo!="null") {
+		    	resp.sendRedirect("webapp/admin/admin-dashboard.html");    	
+		    }
+		 	resp.sendRedirect("/lms/login");
+		
 	}
 
 	@Override
