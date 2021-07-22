@@ -130,7 +130,7 @@ public class BookUserDAOImpl implements BookUserDAO{
 	
 	private String formatter(Date date) {
 		
-		return new SimpleDateFormat("MM-dd-yyyy").format(date);
+		return new SimpleDateFormat("MM/dd/yyyy").format(date);
 	}
 
 }

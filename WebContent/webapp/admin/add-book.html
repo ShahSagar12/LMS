@@ -252,11 +252,9 @@
 			data : JSON.stringify(formdata),
 			dataType : "json",
 			success : function(result) {
-				console.log(result)
-				return;
 				swal({
-					text : "Saved successfully",
-					button : "Saved",
+					text : result.message,
+					button : result.status,
 					icon : "success",
 					timer : 1000
 				});

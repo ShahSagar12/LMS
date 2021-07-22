@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import com.lms.entity.User;
 
-@WebServlet("/user/student-dashboard")
+@WebServlet("/student-dashboard")
 public class StudentDashboardController extends HttpServlet{
 
 	/**

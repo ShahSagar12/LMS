@@ -38,6 +38,18 @@ public class UserServiceImpl implements UserService {
 		
 	}
 
+	@Override
+	public List<User> findAll() throws SQLException {
+		
+		return userDao.findAll();
+	}
+
+	@Override
+	public User findById(int id) throws SQLException {
+		
+		return userDao.get(id);
+	}
+
 	
 	
 

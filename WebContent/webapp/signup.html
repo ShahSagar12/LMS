@@ -82,7 +82,7 @@ $('#btn-signup').on('click',function(){
 			dataType : "json",
 			success : function(result) {
 				swal({
-					text : "Saved successfully",
+					text : result.message,
 					button : false,
 					icon : "success",
 					timer : 1000

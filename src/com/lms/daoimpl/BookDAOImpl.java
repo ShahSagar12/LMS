@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import com.lms.dao.BookDAO;
 import com.lms.dbutils.MySqlConnector;
 import com.lms.entity.Book;
+import com.lms.model.BookOwned;
 
 
 public class BookDAOImpl implements BookDAO {
@@ -143,6 +144,35 @@ public class BookDAOImpl implements BookDAO {
 			connection.close();
 		}
 		return exists;
+	}
+
+	@Override
+	public List<BookOwned> getBookOwnedByUser(int userId) throws SQLException {
+		List<BookOwned> list=new ArrayList<>();
+		Connection connection=MySqlConnector.connectToDB();
+		String sql="SELECT bu.bookid,bu.bookstatus,bu.booktakenat,bu.booktakenfor,bk.booktitle,bk.bookauthor FROM bookuser bu INNER JOIN book bk on bu.bookid=bk.bookid WHERE bu.userid="+userId;
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			ResultSet resultSet=preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				BookOwned bookowned=new BookOwned();
+				bookowned.setBookId(resultSet.getInt("bookid"));
+				bookowned.setBookTitle(resultSet.getString("booktitle"));
+				bookowned.setBookAuthor(resultSet.getString("bookauthor"));
+				bookowned.setBookTakenAt(resultSet.getString("booktakenat"));
+				bookowned.setBookTakenFor(Integer.parseInt(resultSet.getString("booktakenfor")));
+				bookowned.setUserId(userId);
+				list.add(bookowned);
+			}
+		} catch (Exception ex) {
+			LOGGER.info("Error Getting All book "+ex.getMessage());
+		}finally {
+			connection.close();
+		}
+
+		return list;
+		
+		
 	}
 
 }
