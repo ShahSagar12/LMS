@@ -34,11 +34,8 @@ public class AdminController extends HttpServlet{
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		    String userInfo=req.getHeader("user-info");
-		    if(userInfo!="null") {
-		    	resp.sendRedirect("webapp/admin/admin-dashboard.html");    	
-		    }
-		 	resp.sendRedirect("/lms/login");
+		    
+			resp.sendRedirect("webapp/admin/admin-dashboard.html");
 		
 	}
 
