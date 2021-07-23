@@ -80,6 +80,10 @@
 				href="admin-dashboard.html"> <i
 					class="fas fa-fw fa-tachometer-alt"></i> <span>Dashboard</span>
 			</a></li>
+			<li class="nav-item "><a class="nav-link"
+				href="admin-dashboard.html" role="button" aria-expanded="false">
+					<i class="fas fa-fw fa-folder"></i> <span>User</span>
+			</a></li>
 			<li class="nav-item dropdown"><a
 				class="nav-link dropdown-toggle" href="#" id="pagesDropdown"
 				role="button" data-toggle="dropdown" aria-haspopup="true"
@@ -89,53 +93,53 @@
 					<h6 class="dropdown-header">Related Pages:</h6>
 					<a class="dropdown-item" href="add-book.html">Add Book</a>
 				</div></li>
-				</ul>
+		</ul>
 
-			<div id="content-wrapper">
+		<div id="content-wrapper">
 
-					<!-- Breadcrumbs-->
-					<ol class="breadcrumb">
-						<li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-						<li class="breadcrumb-item active">Overview</li>
-					</ol>
+			<!-- Breadcrumbs-->
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+				<li class="breadcrumb-item active">Overview</li>
+			</ol>
 
-					<!-- DataTables Example -->
-					<div class="card mb-3">
-						<div class="card-header">
-							<i class="fas fa-table"></i> Books
-						</div>
-						<div class="card-body">
-							<div class="table-responsive">
-								<table class="table table-bordered" id="dataTable" width="100%"
-									cellspacing="0">
-										<tr>
-											<th>Book Title</th>
-											<th>Book Author</th>
-											<th>Book Publisher</th>
-											<th>Published Year</th>
-											<th>Book Quantity</th>
-											<th>Action</th>
-										</tr>
-								</table>
-							</div>
-						</div>
+			<!-- DataTables Example -->
+			<div class="card mb-3">
+				<div class="card-header">
+					<i class="fas fa-table"></i> Books
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table table-bordered" id="dataTable" width="100%"
+							cellspacing="0">
+							<tr>
+								<th>Book Title</th>
+								<th>Book Author</th>
+								<th>Book Publisher</th>
+								<th>Published Year</th>
+								<th>Book Quantity</th>
+								<th>Action</th>
+							</tr>
+						</table>
 					</div>
-
-				
-
-				<!-- /.container-fluid -->
-
-				<!-- Sticky Footer -->
-				<footer class="sticky-footer">
-					<div class="container my-auto">
-						<div class="copyright text-center my-auto">
-							<span>Copyright © LMS</span>
-						</div>
-					</div>
-				</footer>
-
+				</div>
 			</div>
-			<!-- /.content-wrapper -->
+
+
+
+			<!-- /.container-fluid -->
+
+			<!-- Sticky Footer -->
+			<footer class="sticky-footer">
+				<div class="container my-auto">
+					<div class="copyright text-center my-auto">
+						<span>Copyright © LMS</span>
+					</div>
+				</div>
+			</footer>
+
+		</div>
+		<!-- /.content-wrapper -->
 	</div>
 	<!-- /#wrapper -->
 
@@ -143,6 +147,102 @@
 	<a class="scroll-to-top rounded" href="#page-top"> <i
 		class="fas fa-angle-up"></i>
 	</a>
+	
+	<!--Edit Modal -->
+	<div class="modal fade" id="book-dialog" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form title="Add Book" class="form">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Book</h5>
+					</div>
+					<div class="modal-body">
+						<div class="row mb-3">
+							<label for="inputEmail3" class="col-sm-2 col-form-label">Book
+								Title</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="book-title" required>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<label for="inputPassword3" class="col-sm-2 col-form-label">Book
+								Author</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="book-author"
+									required>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<label for="inputPassword3" class="col-sm-2 col-form-label">Book
+								Publisher</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="book-publisher"
+									required>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<label for="published-year" class="col-sm-2 col-form-label ">Published
+								Year</label>
+							<div class="col-sm-10">
+								<div class='input-group date'>
+									<input type='text' class="form-control" id='published-year'
+										required /> <span class="input-group-addon"> <span
+										class="glyphicon glyphicon-calendar"></span>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<label for="no-Of-Pages" class="col-sm-2 col-form-label">No.
+								Of Pages</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="no-Of-Pages">
+							</div>
+						</div>
+						<div class="row mb-3">
+							<label for="book-quantity" class="col-sm-2 col-form-label">Book
+								Quantity</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="book-quantity">
+							</div>
+						</div>
+						<fieldset class="row mb-3">
+							<legend class="col-form-label col-sm-2 pt-0">Ordered as</legend>
+							<div class="col-sm-10">
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="book-status"
+										id="book-status-loan" value="Onloan" checked> <label
+										class="form-check-label" for="book-status-loan"> Loan
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="book-status"
+										id="book-status-requested" value="Onrequested"> <label
+										class="form-check-label" for="book-status-requested">
+										Requested </label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="book-status"
+										id="book-status-shelf" value="Onshelf"> <label
+										class="form-check-label" for="book-status-shelf">
+										Shelf </label>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+					<div class="modal-footer">
+						<input type="hidden" id="book-id" />
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-danger" id="btn-delete">Delete</button>
+						<button type="submit" class="btn btn-primary" id="btn-edit-save">Save
+							Changes</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
 	<!-- Logout Modal-->
 	<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
@@ -166,6 +266,8 @@
 			</div>
 		</div>
 	</div>
+
+	
 
 	<!-- Bootstrap core JavaScript-->
 	<script src="../shared/vendor/jquery/jquery.min.js"></script>
@@ -204,6 +306,7 @@
 						$("<td/>").html(book.bookQty).appendTo($tr);
 						$tr.on("click", function() {
 							$this = $(this);
+							populateBook($this.attr('data-id'));
 						});
 						$tr.appendTo($table);
 
@@ -211,6 +314,37 @@
 
 				});
 			});
+	function populateBook(id) {
+		
+			$.ajax({
+				type : "GET",
+				url : "/lms/books/all?id="+id,
+				success : function(data) {
+					console.log(data);
+					var bookStatus = "book-status-";
+					if (data.bookStatusType === "Onloan") {
+						bookStatus += "loan";
+					}
+					if (data.bookStatusType === "Onrequested") {
+						bookStatus += "requested";
+					}
+					if (data.bookStatusType === "Onshelf") {
+						bookStatus += "shelf";
+					}
+					$("#book-title").val(data.bookTitle);
+					$("#book-author").val(data.bookAuthor);
+					$("#book-quantity").val(data.bookQty);
+					$("#book-publisher").val(data.publisher);
+					$("#published-year").val(data.publishedYear);
+					$("#no-Of-Pages").val(data.nOfPages);
+					$("#book-publisher").val(data.publisher);
+					$("#book-id").val(data.bookId);
+					$("#" + bookStatus).prop("checked", data.bookStatusType);
+					$("#book-dialog").modal('show');
+		
+				},
+			});	
+	}
     
     
     </script>

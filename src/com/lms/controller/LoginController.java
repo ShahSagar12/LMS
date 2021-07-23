@@ -2,21 +2,18 @@ package com.lms.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.lms.entity.User;
 import com.lms.model.RoleTypes;
+import com.lms.model.UserInfo;
 import com.lms.model.dtos.CredentialsDto;
 import com.lms.model.response.StandardResponse;
 import com.lms.service.UserService;
@@ -43,19 +40,23 @@ public class LoginController extends HttpServlet{
 		CredentialsDto credentialsDto = mapper.readValue(req.getInputStream(), CredentialsDto.class);
 		User authenticatedUser = userService.isAuthenticated(credentialsDto.getEmail(), credentialsDto.getPassword());
 		if(authenticatedUser!=null) {
-			Map<String,String> map=new HashMap<>();
+			UserInfo userInfo=new UserInfo();
 			switch (RoleTypes.roles.get(authenticatedUser.getRoleid())) {
-		
 			case "Admin":
-				map.put("message","successfully logged");
-				map.put("role","Admin");
-				retunResponse(resp, map);
-//				resp.sendRedirect("/lms/admin-dashboard");
+				userInfo.setId(authenticatedUser.getId());
+				userInfo.setUsername(authenticatedUser.getFirstName()+" "+authenticatedUser.getLastName());
+				userInfo.setEmail(authenticatedUser.getEmail());
+				userInfo.setPassword(authenticatedUser.getUserPassword());
+				userInfo.setRole("Admin");
+				retunResponse(resp, userInfo);
 				break;
 			case "User":
-			    map.put("message","successfully logged");
-				map.put("role","User");
-				retunResponse(resp, map);
+				userInfo.setId(authenticatedUser.getId());
+				userInfo.setUsername(authenticatedUser.getFirstName()+" "+authenticatedUser.getLastName());
+				userInfo.setEmail(authenticatedUser.getEmail());
+				userInfo.setPassword(authenticatedUser.getUserPassword());
+				userInfo.setRole("User");
+				retunResponse(resp, userInfo);
 				break;
 			default:
 				break;

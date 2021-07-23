@@ -10,8 +10,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.lms.entity.User;
+import com.lms.model.UserInfo;
+import com.lms.model.dtos.BookOrderDto;
 import com.lms.service.BookService;
 import com.lms.serviceimpl.BookServiceImpl;
 
@@ -25,11 +28,12 @@ public class BookOwnedController extends HttpServlet{
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		BookService bookService=new BookServiceImpl();
+		
 		try {
-			User user = (User) req.getSession().getAttribute("authenticatedUser");
-			System.out.println(user);
-			retunResponse(resp, bookService.getBookOwnedByUser(user.getId()));
+			ObjectMapper mapper = new ObjectMapper();
+			UserInfo userInfo = mapper.readValue(req.getHeader("userInfo"), UserInfo.class);
+			BookService bookService=new BookServiceImpl();
+			retunResponse(resp, bookService.getBookOwnedByUser(userInfo.getId()));
 		} catch (IOException | SQLException e) {
 			e.printStackTrace();
 		} 

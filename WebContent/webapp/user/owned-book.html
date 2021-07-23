@@ -26,6 +26,8 @@
 
 <!-- Custom styles for this template-->
 <link href="../shared/css/sb-admin.css" rel="stylesheet">
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 
 </head>
 
@@ -197,10 +199,49 @@
 	<script src="../shared/js/sb-admin.min.js"></script>
 	
 	<script type="text/javascript">
-	
-	$(document).ready(
-			function() {
-				$.getJSON("/lms/books/owned", function(data) {
+	userInfo=window.localStorage.getItem('userInfo');
+	$(document).ready(function() {
+			$.ajax({
+				type : "GET",
+				url : "/lms/books/owned",
+				contentType : "application/json",
+				headers: { 'userInfo': userInfo },
+				dataType : "json",
+				success : function(result) {
+					$table = $("#dataTable");
+					$.each(result, function(i, book) {
+						var $tr = $("<tr data-id='"+book.bookId+"'/>").css(
+								"cursor", "pointer");
+						$("<td/>").html(book.bookTitle).appendTo($tr);
+						$("<td data-title='name'/>").html(book.bookAuthor)
+								.appendTo($tr);
+						$("<td/>").html(book.bookTakenAt).appendTo($tr);
+						$("<td/>").html(book.bookTakenFor).appendTo($tr);
+						$("<td/>").html(book.remainingDays).appendTo($tr);
+						$("<td/>").html(book.fineCalibrated).appendTo($tr);
+						$tr.on("click", function() {
+							$this = $(this);
+						});
+						$tr.appendTo($table);
+
+					});
+					
+				},
+				error : function(e) {
+					swal({
+						text : "Cannot Saved",
+						icon:"warning",
+						button : "Ok",
+						timer : 2000
+					});
+				}
+
+			});
+			
+			
+			
+			
+				/* $.getJSON("/lms/books/owned",function(data) {
 					$table = $("#dataTable");
 					$.each(data, function(i, book) {
 						var $tr = $("<tr data-id='"+book.bookId+"'/>").css(
@@ -219,7 +260,7 @@
 
 					});
 
-				});
+				}); */
 			});
 	
 	</script>

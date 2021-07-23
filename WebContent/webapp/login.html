@@ -70,17 +70,13 @@
 				data : JSON.stringify(formdata),
 				dataType : "json",
 				success : function(result) {
-					console.log("result logged in")
-					console.log(result);
 					localStorage.setItem("userInfo",JSON.stringify(result));
 					if(result.role==="Admin"){
-						window.location.href="/lms/admin-dashboard"	
+						window.location.href="/lms/admin-dashboard";
 					}
 					else{
-						window.location.href="/lms/student-dashboard"	
+						window.location.href="/lms/student-dashboard";
 					}
-				
-		
 				},
 				error : function(e) {
 					swal({

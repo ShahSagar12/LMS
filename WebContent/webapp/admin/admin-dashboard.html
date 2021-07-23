@@ -71,6 +71,12 @@
             <span>Dashboard</span>
           </a>
         </li>
+        <li class="nav-item ">
+          <a class="nav-link" href="admin-dashboard.html" role="button"  aria-expanded="false">
+            <i class="fas fa-fw fa-folder"></i>
+            <span>User</span>
+          </a>
+        </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="pagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="fas fa-fw fa-folder"></i>
@@ -136,6 +142,59 @@
     <a class="scroll-to-top rounded" href="#page-top">
       <i class="fas fa-angle-up"></i>
     </a>
+    
+    <!--Edit Modal -->
+	<div class="modal fade" id="user-dialog" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form title="Add Book" class="form">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">User</h5>
+					</div>
+					<div class="modal-body">
+						<div class="row mb-3">
+							<label for="first-name" class="col-sm-2 col-form-label">First Name</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="first-name" required>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<label for="last-name" class="col-sm-2 col-form-label">Last Name</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="last-name"
+									required>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<label for="email" class="col-sm-2 col-form-label">Email</label>
+							<div class="col-sm-10">
+								<input type="email" class="form-control" id="email"
+									required>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<label for="password" class="col-sm-2 col-form-label ">Password
+								</label>
+							<div class="col-sm-10">
+									<input type='password' class="form-control" id='password'
+										required /> <span class="input-group-addon">
+									</span>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<input type="hidden" id="book-id" />
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-danger" id="btn-delete">Delete</button>
+						<button type="submit" class="btn btn-primary" id="btn-edit-save">Save
+							Changes</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -179,8 +238,6 @@
     
     $(document).ready(
     		function() {
-    			console.log("my user info");
-        		console.log(localStorage.getItem("userInfo"));
         		$.ajax({
     				type : "GET",
     				url : baseUrl +"/users/all",
@@ -196,9 +253,9 @@
     						$("<td/>").html(user.email).appendTo($tr);
     						$tr.on("click", function() {
     							$this = $(this);
+    							populateUser($this.attr('data-id'));
     						});
     						$tr.appendTo($table);
-
     					});
     		
     				},
@@ -230,6 +287,26 @@
 
 				}); */
 			});
+    
+    function populateUser(id) {
+		
+		$.ajax({
+			type : "GET",
+			url : baseUrl +"/users/all?id="+id,
+			success : function(data) {
+				$("#first-name").val(data.firstName);
+				$("#last-name").val(data.lastName);
+				$("#email").val(data.email);
+				$("#password").val(data.userPassword);
+				$("#role-id").val(data.roleId);
+				$("#user-dialog").modal('show');
+	
+			},
+			
+		});
+		
+	
+}
     
     
     </script>

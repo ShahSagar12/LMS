@@ -26,8 +26,14 @@ public class UserController extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		UserService userService=new UserServiceImpl();
+		int parameterValues = req.getParameter("id")==null?0:Integer.parseInt(req.getParameter("id"));
 		try {
-			retunResponse(resp, userService.findAll());
+			if(parameterValues!=0) {
+				retunResponse(resp, userService.findById(parameterValues));
+			}else {
+				retunResponse(resp, userService.findAll());
+			}
+			
 		} catch (IOException | SQLException e) {
 			e.printStackTrace();
 		} 

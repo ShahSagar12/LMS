@@ -10,7 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.lms.entity.BookUser;
+import com.lms.model.dtos.BookOrderDto;
 import com.lms.service.BookService;
 import com.lms.serviceimpl.BookServiceImpl;
 
@@ -21,18 +24,22 @@ public class BookListController extends HttpServlet{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		BookService bookService=new BookServiceImpl();
+		int parameterValues = req.getParameter("id")==null?0:Integer.parseInt(req.getParameter("id"));
 		try {
-			retunResponse(resp, bookService.findAll());
+			if(parameterValues!=0) {
+				retunResponse(resp, bookService.get(parameterValues));
+			}else {
+				retunResponse(resp, bookService.findAll());
+			}
 		} catch (IOException | SQLException e) {
 			e.printStackTrace();
 		} 
-		
 	}
-	
+
 	private void retunResponse(HttpServletResponse resp, Object object) throws IOException {
 		Gson gson = new Gson();
 		String userJsonString = gson.toJson(object);

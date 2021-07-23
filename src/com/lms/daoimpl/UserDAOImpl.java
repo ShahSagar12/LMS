@@ -74,7 +74,7 @@ public class UserDAOImpl implements UserDAO {
 			preparedStatement.setInt(1,id);
 			ResultSet resultSet=preparedStatement.executeQuery();
 			while(resultSet.next()) {
-				user.setId(resultSet.getInt("userid"));
+				user.setId(resultSet.getInt("id"));
 				user.setFirstName(resultSet.getString("firstname"));
 				user.setLastName(resultSet.getString("lastname"));
 				user.setEmail(resultSet.getString("email"));
