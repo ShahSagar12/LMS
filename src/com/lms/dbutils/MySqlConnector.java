@@ -15,7 +15,7 @@ public class MySqlConnector {
 		Connection connection=null;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			connection=DriverManager.getConnection("jdbc:mysql://localhost:3306/lms?serverTimezone=UTC","root","");
+			connection=DriverManager.getConnection("jdbc:mysql://localhost:3306/lms?serverTimezone=UTC","root","password");
 		} catch (Exception ex) {
 			LOGGER.info("ERROR: CONNECTING DATABASE"+ex.getMessage());
 		}
