@@ -155,6 +155,29 @@
 
 	</div>
 	<!-- /#wrapper -->
+	
+	<!--Return Book  Modal -->
+	<div class="modal fade" id="return-book-dialog" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form title="Add Book" class="form">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Return Book</h5>
+					</div>
+					<div class="modal-body">						
+					<label for="inputEmail3" >Are you sure you ant to return this book?</label>
+					</div>
+					<div class="modal-footer">
+						<input type="hidden" id="book-id" />
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary" id="btn-return">Return</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
 	<!-- Scroll to Top Button-->
 	<a class="scroll-to-top rounded" href="#page-top"> <i
@@ -199,11 +222,12 @@
 	<script src="../shared/js/sb-admin.min.js"></script>
 	
 	<script type="text/javascript">
+	var baseUrl = window.location.origin +"/lms/";
 	userInfo=window.localStorage.getItem('userInfo');
 	$(document).ready(function() {
 			$.ajax({
 				type : "GET",
-				url : "/lms/books/owned",
+				url : baseUrl+"books/owned",
 				contentType : "application/json",
 				headers: { 'userInfo': userInfo },
 				dataType : "json",
@@ -221,6 +245,7 @@
 						$("<td/>").html(book.fineCalibrated).appendTo($tr);
 						$tr.on("click", function() {
 							$this = $(this);
+							populateBook($this.attr('data-id'));
 						});
 						$tr.appendTo($table);
 
@@ -237,31 +262,46 @@
 				}
 
 			});
-			
-			
-			
-			
-				/* $.getJSON("/lms/books/owned",function(data) {
-					$table = $("#dataTable");
-					$.each(data, function(i, book) {
-						var $tr = $("<tr data-id='"+book.bookId+"'/>").css(
-								"cursor", "pointer");
-						$("<td/>").html(book.bookTitle).appendTo($tr);
-						$("<td data-title='name'/>").html(book.bookAuthor)
-								.appendTo($tr);
-						$("<td/>").html(book.bookTakenAt).appendTo($tr);
-						$("<td/>").html(book.bookTakenFor).appendTo($tr);
-						$("<td/>").html(book.remainingDays).appendTo($tr);
-						$("<td/>").html(book.fineCalibrated).appendTo($tr);
-						$tr.on("click", function() {
-							$this = $(this);
-						});
-						$tr.appendTo($table);
-
+			$('#btn-return').on('click',function(){
+			var bookId=$('#book-id').val();
+			$("#return-book-dialog").modal('hide');
+			$.ajax({
+				type : "POST",
+				url : baseUrl +"return/book?book-id="+bookId,
+				contentType : "application/json",
+				dataType : "json",
+				success : function(result) {
+					swal({
+						text : result.message,
+						button : "ok",
+						icon : "success",
+						timer : 1000
 					});
+				},
+				error : function(e) {
+					swal({
+						text : "Cannot Saved",
+						icon:"warning",
+						button : "Ok",
+						timer : 2000
+					});
+				}
 
-				}); */
 			});
+			});
+		});
+	function populateBook(id) {
+			$.ajax({
+					type : "GET",
+					url : baseUrl+"books/all?id="+id,
+					success : function(data) {
+						$("#book-id").val(data.bookId);
+						$("#return-book-dialog").modal('show');
+					},
+			});	
+	}
+	
+	
 	
 	</script>
 </body>

@@ -50,6 +50,12 @@ public class UserServiceImpl implements UserService {
 		return userDao.get(id);
 	}
 
+	@Override
+	public User getByEmail(String email) throws SQLException {
+		
+		return userDao.getByEmail(email);
+	}
+
 	
 	
 

@@ -35,8 +35,6 @@ public class BookDAOImpl implements BookDAO {
 			ResultSet rs = preparedStatement.getGeneratedKeys();
 	        if (rs.next()) {
 	            int key = rs.getInt(1);
-	            System.out.print("---------------------------id-------------");
-	            System.out.print(key);
 	        }
 			saved=true;
 		}catch(Exception ex) {
@@ -102,6 +100,33 @@ public class BookDAOImpl implements BookDAO {
 		}
 		return book;
 
+	}
+	
+	@Override
+	public Book getByBookTitle(String title) throws SQLException {
+		Book book=new Book();
+		Connection connection=MySqlConnector.connectToDB();
+		String sql="SELECT * FROM book WHERE booktitle=?";
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			preparedStatement.setString(1,title);
+			ResultSet resultSet=preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				book.setBookId(resultSet.getInt("bookId"));
+				book.setBookTitle(resultSet.getString("booktitle"));
+				book.setBookAuthor(resultSet.getString("bookauthor"));
+				book.setPublisher(resultSet.getString("bookpublisher"));
+				book.setPublishedYear(resultSet.getString("publishedyear"));
+				book.setBookQty(resultSet.getInt("bookqty"));
+				book.setnOfPages(resultSet.getInt("totalpages"));
+				book.setAdminId(resultSet.getInt("adminid"));
+			}
+		} catch (Exception ex) {
+			LOGGER.info("Error getting book by booktitle "+ex.getMessage());
+		}finally {
+			connection.close();
+		}
+		return book;
 	}
 
 	@Override

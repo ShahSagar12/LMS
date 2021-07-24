@@ -10,4 +10,5 @@ public interface UserService {
 	public User isAuthenticated(String email,String password);
 	public List<User> findAll() throws SQLException;
 	public User findById(int id) throws SQLException;
+	User getByEmail(String email) throws SQLException;
 }

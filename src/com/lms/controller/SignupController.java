@@ -30,7 +30,7 @@ public class SignupController extends HttpServlet{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private static final Logger LOGGER = Logger.getLogger(UserDAOImpl.class.getName());
 
 	@Override
@@ -52,20 +52,25 @@ public class SignupController extends HttpServlet{
 			user.setUserPassword(userDto.getPassword());
 			Role role = roleService.findByRole(userDto.getRegisterAs());
 			user.setRoleid(role.getRoleid());
-			if(userService.register(user)) {
-				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_OK, "Saved Successfully");
-				retunResponse(resp, sr);
+			System.out.println(userService.getByEmail(userDto.getEmail()));
+			if(userService.getByEmail(userDto.getEmail()).getId()==0) {
+				if(userService.register(user)) {
+					StandardResponse sr=new StandardResponse(HttpServletResponse.SC_OK, "Saved Successfully");
+					retunResponse(resp, sr);
+				}else {
+					StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Cannot Save Successfully");
+					retunResponse(resp, sr);
+				}
 			}else {
-				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Cannot Save Successfully");
+				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Duplicate Email");
 				retunResponse(resp, sr);
 			}
-			resp.sendRedirect("/lms/login");
 		} catch (SQLException e) {
 			StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Error In Data");
 			retunResponse(resp, sr);
 		}
 	}
-	
+
 	private void retunResponse(HttpServletResponse resp, Object object) throws IOException {
 		Gson gson = new Gson();
 		String userJsonString = gson.toJson(object);

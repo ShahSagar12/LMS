@@ -89,6 +89,32 @@ public class UserDAOImpl implements UserDAO {
 		}
 		return user;
 	}
+	
+	@Override
+	public User getByEmail(String email) throws SQLException {
+		User user=new User();
+		Connection connection=MySqlConnector.connectToDB();
+		String sql="SELECT * FROM user WHERE email=?";
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			preparedStatement.setString(1,email);
+			ResultSet resultSet=preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				user.setId(resultSet.getInt("id"));
+				user.setFirstName(resultSet.getString("firstname"));
+				user.setLastName(resultSet.getString("lastname"));
+				user.setEmail(resultSet.getString("email"));
+				user.setUserPassword(resultSet.getString("password"));
+				user.setRoleid(resultSet.getInt("roleid"));
+			}
+		} catch (Exception ex) {
+			LOGGER.info("ERROR: get user by id "+ex.getMessage());
+		}
+		finally {
+			connection.close();
+		}
+		return user;
+	}
 
 	@Override
 	public boolean update(User user) throws SQLException {

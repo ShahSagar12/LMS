@@ -31,20 +31,19 @@
 								class="form-control" placeholder="last name" id="lastname">
 						</div>
 						<div class="col-12">
-							<label>Email</label> <input type="email" name="email"
+							<label>Email</label> <input type="email"
 								class="form-control" placeholder="email" id="email">
 						</div>
 
 						<div class="col-12">
-							<label>Password</label> <input type="password" name="password"
+							<label>Password</label> <input type="password"
 								class="form-control" placeholder="Password" id="password">
 						</div>
 						
 						<div class="col-auto">
 							<label for="autoSizingSelect">Register As</label>
-							<select class="form-select" id="register-as" name="role">
-								<option selected>Choose...</option>
-								<option value="Admin">Admin</option>
+							<select class="form-select" id="register-as">
+								<option value="Admin" selected>Admin</option>
 								<option value="User">User</option>
 							</select>
 						</div>
@@ -81,10 +80,11 @@ $('#btn-signup').on('click',function(){
 			data : JSON.stringify(formdata),
 			dataType : "json",
 			success : function(result) {
+				icons=result.status===200?"success":"warning";
 				swal({
 					text : result.message,
 					button : false,
-					icon : "success",
+					icon : icons,
 					timer : 1000
 				});
 			},

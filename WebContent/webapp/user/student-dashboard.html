@@ -26,7 +26,8 @@
 
 <!-- Custom styles for this template-->
 <link href="../shared/css/sb-admin.css" rel="stylesheet">
-
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 </head>
 
 <body id="page-top">
@@ -155,6 +156,94 @@
 	<a class="scroll-to-top rounded" href="#page-top"> <i
 		class="fas fa-angle-up"></i>
 	</a>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="book-dialog" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form title="Add Book" class="form">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Order Book</h5>
+					</div>
+					<div class="modal-body">
+						<div class="row mb-3">
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="book-title"
+									readonly>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="book-author"
+									readonly>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="book-publisher"
+									 readonly>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-sm-10">
+								<div class='input-group date'>
+									<input type='hidden' class="form-control" 
+										id='published-year' readonly /> <span
+										class="input-group-addon"> <span
+										class="glyphicon glyphicon-calendar"></span>
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-sm-10">
+								<input type="hidden" class="form-control" id="no-Of-Pages"
+									 readonly>
+							</div>
+						</div>
+						<div>
+							<label for="take-book-for" class="col-sm-9 col-form-label">Take Book For(*days)</label>
+							
+								<input type="text" class="form-control" id="take-book-for"
+									 required>
+							
+						</div>
+						<fieldset class="row mb-3">
+							<legend class="col-form-label col-sm-9 pt-0">Request
+								Book </legend>
+							<div class="col-sm-10">
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="book-status"
+										id="book-status-loan" value="Onloan" > <label
+										class="form-check-label" for="book-status-loan"> Loan
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="book-status"
+										id="book-status-requested" value="Onrequested"> <label
+										class="form-check-label" for="book-status-requested">
+										Requested </label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="book-status"
+										id="book-status-shelf" value="Onshelf" checked> <label
+										class="form-check-label" for="book-status-shelf">
+										Shelf </label>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+					<div class="modal-footer">
+						<input type="hidden" id="book-id"/>
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary" id="btn-submit-ch">Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
 	<!-- Logout Modal-->
 	<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog"
@@ -194,10 +283,10 @@
 	<script src="../shared/js/sb-admin.min.js"></script>
 	
 	<script type="text/javascript">
-	
+	var baseUrl = window.location.origin + "/lms/";
 	$(document).ready(
 			function() {
-				$.getJSON("/lms/books/all", function(data) {
+				$.getJSON(baseUrl+"books/all", function(data) {
 					$table = $("#dataTable");
 					$.each(data, function(i, book) {
 						var $tr = $("<tr data-id='"+book.bookId+"'/>").css(
@@ -209,11 +298,77 @@
 						$("<td/>").html(book.publishedYear).appendTo($tr);
 						$tr.on("click", function() {
 							$this = $(this);
+							populateBook($this.attr('data-id'));
 						});
 						$tr.appendTo($table);
 					});
 				});
+				
+				//Order Book Function
+				
+				$('#btn-submit-ch').on('click',function() {
+							 var formdata = {
+								bookId : $("#book-id").val(),
+								bookStatus : $("input[type='radio'][name='book-status']:checked").val(),
+								bookTakenFor:$('#take-book-for').val()
+							};
+							$.ajax({
+										type : "POST",
+										url : baseUrl+ "order",
+										contentType : "application/json",
+										headers: { 'userInfo': window.localStorage.getItem('userInfo')},
+										data : JSON.stringify(formdata),
+										dataType : "json",
+										success : function(result) {
+											icons=result.status===200?"success":"warning";
+											swal({
+												text : result.message,
+												button : false,
+												icon : icons,
+												timer : 1000
+											});
+											
+										},
+										error : function(e) {
+											swal({
+												text : "Cannot Order",
+												icon : "warning",
+												button : Ok,
+												timer : 2000
+											});
+										}
+
+									}); 
+						}); 
+				
 			});
+	
+	function populateBook(id) {
+		$.getJSON(baseUrl+"books/all", {
+			id : id
+		}, function(data) {
+			console.log(data);
+			var bookStatus = "book-status-";
+			if (data.bookStatusType === "Onloan") {
+				bookStatus += "loan";
+			}
+			if (data.bookStatusType === "Onrequested") {
+				bookStatus += "requested";
+			}
+			if (data.bookStatusType === "Onshelf") {
+				bookStatus += "shelf";
+			}
+			$("#book-title").val(data.bookTitle);
+			$("#book-author").val(data.bookAuthor);
+			$("#book-publisher").val(data.publisher);
+			$("#published-year").val(data.publishedYear);
+			$("#no-Of-Pages").val(data.nOfPages);
+			$("#book-publisher").val(data.publisher);
+			$("#book-id").val(data.bookId);
+			$("#" + bookStatus).prop("checked", data.bookStatusType);
+			$("#book-dialog").modal('show');
+		});
+	}
 	</script>
 </body>
 </html>

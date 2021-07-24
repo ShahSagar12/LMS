@@ -90,5 +90,11 @@ public class BookServiceImpl implements BookService{
 		return (long) fine;
 	}
 
+	@Override
+	public Book getByBookTitle(String title) throws SQLException {
+		
+		return bookDao.getByBookTitle(title);
+	}
+
 
 }

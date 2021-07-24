@@ -252,14 +252,16 @@
 		$.ajax({
 			type : "POST",
 			url : baseUrl +"admin-dashboard",
+			headers: { 'user-info':  localStorage.getItem("userInfo")},
 			contentType : "application/json",
 			data : JSON.stringify(formdata),
 			dataType : "json",
 			success : function(result) {
+				icons=result.status===200?"success":"warning";
 				swal({
 					text : result.message,
-					button : result.status,
-					icon : "success",
+					button : false,
+					icon : icons,
 					timer : 1000
 				});
 			},

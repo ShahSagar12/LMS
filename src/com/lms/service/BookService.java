@@ -15,4 +15,5 @@ public interface BookService {
 	boolean delete(int id) throws SQLException;
 //	boolean alreadyTakenSufficientBooks(Integer userId);
 	List<BookOwnedDto> getBookOwnedByUser(int userId) throws SQLException;
+	Book getByBookTitle(String title) throws SQLException;
 }

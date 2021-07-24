@@ -16,7 +16,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.lms.daoimpl.UserDAOImpl;
 import com.lms.entity.Book;
+import com.lms.entity.BookUser;
 import com.lms.entity.User;
+import com.lms.model.UserInfo;
 import com.lms.model.response.StandardResponse;
 import com.lms.service.BookService;
 import com.lms.serviceimpl.BookServiceImpl;
@@ -43,22 +45,28 @@ public class AdminController extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+			UserInfo userInfo = mapper.readValue(req.getHeader("user-info"), UserInfo.class);
+			System.out.println(userInfo);
 			Book book = mapper.readValue(req.getInputStream(), Book.class);
 			BookService bookService=new BookServiceImpl();
-			User user=(User)req.getSession().getAttribute("authenticatedUser");
-			book.setAdminId(user.getId());
-			System.out.println(book);
-			if(book.getBookId()==0) {
-				if(bookService.save(book)) {
-					StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_OK, "Saved Successfully");
-					retunResponse(resp, standardResponse);
+			book.setAdminId(userInfo.getId());
+			if(bookService.getByBookTitle(book.getBookTitle()).getBookId()==0) {
+				if(book.getBookId()==0) {
+					if(bookService.save(book)) {
+						StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_OK, "Saved Successfully");
+						retunResponse(resp, standardResponse);
+					}
+				}else {
+					if(bookService.update(book)) {
+						StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_ACCEPTED, "Edited Successfully");
+						retunResponse(resp, standardResponse);
+					}
 				}
 			}else {
-				if(bookService.update(book)) {
-					StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_ACCEPTED, "Edited Successfully");
-					retunResponse(resp, standardResponse);
-				}
+				StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Book Already exist");
+				retunResponse(resp, standardResponse);
 			}
+			
 		}catch(SQLException exp){
 			StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Cannot Save Object");
 			retunResponse(resp, standardResponse);

@@ -174,10 +174,11 @@
 															dataType : "json",
 															success : function(
 																	result) {
+																icons=result.status===200?"success":"warning";
 																swal({
-																	text : "Ordered successfully",
+																	text : result.message,
 																	button : false,
-																	icon : "success",
+																	icon : icons,
 																	timer : 1000
 																});
 															},
