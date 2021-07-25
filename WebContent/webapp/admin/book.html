@@ -158,6 +158,7 @@
 						<h5 class="modal-title" id="exampleModalLabel">Book</h5>
 					</div>
 					<div class="modal-body">
+					<input type="hidden" class="form-control" id="book-id" required>
 						<div class="row mb-3">
 							<label for="inputEmail3" class="col-sm-2 col-form-label">Book
 								Title</label>
@@ -207,36 +208,15 @@
 								<input type="text" class="form-control" id="book-quantity">
 							</div>
 						</div>
-						<fieldset class="row mb-3">
-							<legend class="col-form-label col-sm-2 pt-0">Ordered as</legend>
-							<div class="col-sm-10">
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="book-status"
-										id="book-status-loan" value="Onloan" > <label
-										class="form-check-label" for="book-status-loan"> Loan
-									</label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="book-status"
-										id="book-status-requested" value="Onrequested"> <label
-										class="form-check-label" for="book-status-requested">
-										Requested </label>
-								</div>
-								<div class="form-check">
-									<input class="form-check-input" type="radio" name="book-status"
-										id="book-status-shelf" value="Onshelf" checked> <label
-										class="form-check-label" for="book-status-shelf">
-										Shelf </label>
-								</div>
-							</div>
-						</fieldset>
+					
+							
 					</div>
 					<div class="modal-footer">
 						<input type="hidden" id="book-id" />
-						<button type="button" class="btn btn-secondary"
+						<button type="submit" class="btn btn-secondary"
 							data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-danger" id="btn-delete">Delete</button>
-						<button type="submit" class="btn btn-primary" id="btn-edit-save">Save
+						<button type="submit" class="btn btn-danger" id="btn-delete" onclick=deleteBook()>Delete</button>
+						<button type="button" class="btn btn-primary" id="btn-edit-save" onclick=saveChanges()>Save
 							Changes</button>
 					</div>
 				</form>
@@ -287,8 +267,12 @@
 	<!-- Demo scripts for this page-->
 	<script src="../shared/js/demo/datatables-demo.js"></script>
 	<script src="../shared/js/demo/chart-area-demo.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+	
 
 	<script type="text/javascript">
+	var baseUrl = window.location.origin +"/lms/";
 	function logout(){
 		localStorage.removeItem("userInfo");
 		window.location.href="/lms";
@@ -303,6 +287,7 @@
 					$.each(data, function(i, book) {
 						var $tr = $("<tr data-id='"+book.bookId+"'/>").css(
 								"cursor", "pointer");
+						$("<td/>").html(book.bookId).appendTo($tr);
 						$("<td/>").html(book.bookTitle).appendTo($tr);
 						$("<td data-title='name'/>").html(book.bookAuthor)
 								.appendTo($tr);
@@ -354,7 +339,103 @@
 				},
 			});	
 	}
+	
+	function deleteBook(){
+		$.ajax({
+			type : "DELETE",
+			url : baseUrl +"admin-dashboard?id="+$('#book-id').val(),
+			headers: { 'user-info':  localStorage.getItem("userInfo")},
+			contentType : "application/json",
+			success : function(result) {
+				icons=result.status===200?"success":"warning";
+				swal({
+					text : result.message,
+					button : false,
+					icon : icons,
+					timer : 1000
+				});
+			},
+			error : function(e) {
+				swal({
+					text : "Cannot Saved",
+					icon:"warning",
+					button : "Ok",
+					timer : 2000
+				});
+			}
+
+		});
+	}
     
+	function saveChanges(){
+		var bookTitle= $('#book-title').val();
+		var bookAuthor=$('#book-author').val();
+		var bookPublisher=$('#book-publisher').val();
+		var publishedYear=$('#published-year').val();
+		var noOfPages=$('#no-Of-Pages').val();
+		var bookQty=$('#book-quantity').val();
+		if(!bookTitle){
+			alert("title is required");
+			return false;
+		}
+		
+		else if(!bookAuthor){
+			alert("author is required");
+			return false;
+		}
+		else if(!bookPublisher){
+			alert("publisher is required");
+			return false;
+		}
+		else if(!publishedYear){
+			alert("year is required");
+			return false;
+		}
+		else if(!noOfPages){
+			alert("no of pages is required");
+			return false;
+		}
+		else if(!bookQty){
+			alert("quantity is required");
+			return false;
+		}
+		var formdata = {
+			bookTitle :bookTitle,
+			bookAuthor :bookAuthor,
+			bookPublisher : bookPublisher,
+			publishedYear : publishedYear,
+			noOfPages : noOfPages,
+			bookQty:bookQty,
+			bookId:$('#book-id').val()
+		};
+		$.ajax({
+			type : "PUT",
+			url : baseUrl +"admin-dashboard",
+			headers: { 'user-info':  localStorage.getItem("userInfo")},
+			contentType : "application/json",
+			data : JSON.stringify(formdata),
+			dataType : "json",
+			success : function(result) {
+				icons=result.status===200?"success":"warning";
+				swal({
+					text : result.message,
+					button : false,
+					icon : icons,
+					timer : 1000
+				});
+				document.getElementById("bookForm").reset();
+			},
+			error : function(e) {
+				swal({
+					text : "Cannot Saved",
+					icon:"warning",
+					button : "Ok",
+					timer : 2000
+				});
+			}
+
+		});
+	}
 	function myFunction() {
 
 		  // Declare variables 

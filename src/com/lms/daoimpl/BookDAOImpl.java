@@ -133,7 +133,7 @@ public class BookDAOImpl implements BookDAO {
 	public boolean update(Book book) throws SQLException {
 		boolean exists=false;
 		Connection connection=MySqlConnector.connectToDB();
-		String sql="UPDATE book SET booktitle=?, bookauthor=?, bookpublisher=?, publishedyear=?,bookqty=?,totalpages=?, adminid=? where bookid="+book.getBookId();
+		String sql="UPDATE book SET booktitle=?, bookauthor=?, bookpublisher=?, publishedyear=?,bookqty=?,totalpages=? where bookid="+book.getBookId();
 		try {
 			PreparedStatement preparedStatement=connection.prepareStatement(sql);
 			preparedStatement.setString(1, book.getBookTitle());
@@ -142,7 +142,6 @@ public class BookDAOImpl implements BookDAO {
 			preparedStatement.setString(4, book.getPublishedYear());
 			preparedStatement.setInt(5, book.getBookQty());
 			preparedStatement.setInt(6, book.getnOfPages());
-			preparedStatement.setInt(7, book.getAdminId());
 			preparedStatement.executeUpdate();
 			exists=true;
 		}catch(Exception ex) {
@@ -157,11 +156,11 @@ public class BookDAOImpl implements BookDAO {
 	public boolean delete(int id) throws SQLException {
 		boolean exists=false;
 		Connection connection=MySqlConnector.connectToDB();
-		String sql="DELETE book WHERE id=?";
+		String sql="DELETE from book WHERE bookid=?";
 		try {
 			PreparedStatement preparedStatement=connection.prepareStatement(sql);
 			preparedStatement.setInt(1,id);
-			preparedStatement.executeQuery();
+			preparedStatement.executeUpdate();
 			exists=true;
 		}catch(Exception ex) {
 			LOGGER.info("ERROR:Book delete :"+ex.getMessage());

@@ -181,7 +181,7 @@
 				<div class="modal-footer">
 					<button class="btn btn-secondary" type="button"
 						data-dismiss="modal">Cancel</button>
-					<a class="btn btn-primary" href="/lms/logout">Logout</a>
+					<a class="btn btn-primary" onclick=logout()>Logout</a>
 				</div>
 			</div>
 		</div>
@@ -202,9 +202,14 @@
 	<script src="../shared/js/sb-admin.min.js"></script>
 	
 	<script type="text/javascript">
+	function logout(){
+		localStorage.removeItem("userInfo");
+		window.location.href="/lms";
+	}
 	var baseUrl = window.location.origin +"/lms/";
 	userInfo=window.localStorage.getItem('userInfo');
 	$(document).ready(function() {
+		if(localStorage.getItem("userInfo")){
 			$.ajax({
 				type : "GET",
 				url : baseUrl+"books/owned",
@@ -241,8 +246,12 @@
 					});
 				}
 
-			});
+			});}
+		else{
+			window.location.href="/lms";
+		}
 			$('#btn-return').on('click',function(){
+				if(localStorage.getItem("userInfo")){
 			var bookId=$('#book-id').val();
 			$("#return-book-dialog").modal('hide');
 			$.ajax({
@@ -267,7 +276,10 @@
 					});
 				}
 
-			});
+			});}
+				else{
+					window.location.href="/lms";
+				}
 			});
 		});
 	function populateBook(id) {

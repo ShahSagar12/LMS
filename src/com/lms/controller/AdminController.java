@@ -40,6 +40,43 @@ public class AdminController extends HttpServlet{
 			resp.sendRedirect("webapp/admin/admin-dashboard.html");
 		
 	}
+	@Override
+	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		    int id = req.getParameter("id")==null?0:Integer.parseInt(req.getParameter("id"));
+		    try {
+				boolean isDeleted=new BookServiceImpl().delete(id);
+				if(isDeleted) {
+					StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_OK, "Deleted Successfully");
+					retunResponse(resp, standardResponse);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Unable to delete");
+				retunResponse(resp, standardResponse);
+				// TODO Auto-generated catch block
+			}
+		
+	}
+	
+	@Override
+	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		UserInfo userInfo = mapper.readValue(req.getHeader("user-info"), UserInfo.class);
+		System.out.println(userInfo);
+		Book book = mapper.readValue(req.getInputStream(), Book.class);
+		try {
+			boolean isUpdate=new BookServiceImpl().update(book);
+			if(isUpdate) {
+				StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_OK, "Updated Successfully");
+				retunResponse(resp, standardResponse);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Cannot update book");
+			retunResponse(resp, standardResponse);
+		}
+	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -48,8 +48,14 @@ public class BookOrderController extends HttpServlet{
 		bookUser.setBookStatus(bookOrder.getBookStatus());
 		bookUser.setBookTakenFor(Integer.parseInt(bookOrder.getBookTakenFor()));
 		bookUser.setUserId(userInfo.getId());
-
 		try {
+			BookUser bookOrderAlready=bookUserService.getByUserIdAndBook(userInfo.getId(), Integer.parseInt(bookOrder.getBookId()));
+			if(bookOrderAlready!=null) {
+				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_NOT_ACCEPTABLE, "This book has already been ordered");
+				retunResponse(resp, sr);
+				return;
+				
+		}
 			Book book = bookService.get(Integer.parseInt(bookOrder.getBookId()));
 			book.setBookQty(book.getBookQty()-1);
 			BookUser bookUsers = bookUserService.findAll()

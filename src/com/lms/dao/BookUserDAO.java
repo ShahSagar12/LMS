@@ -9,6 +9,7 @@ public interface BookUserDAO {
 	boolean save(BookUser bookUser) throws SQLException;
 	List<BookUser> findAll() throws SQLException;
 	BookUser get(int id) throws SQLException;
+	BookUser getByUserIdAndBook(int userId,int bookId) throws SQLException;
 	boolean update(BookUser bookUser) throws SQLException;
 	boolean delete(int id) throws SQLException;
 
