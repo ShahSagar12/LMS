@@ -3,8 +3,6 @@ package com.lms.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -38,16 +36,12 @@ public class BookOrderController extends HttpServlet{
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		if(!(req.getHeader("user-info").equals("null"))) {
 		BookUserService bookUserService=new BookUserServiceImpl();
 		BookService bookService=new BookServiceImpl();
 		ObjectMapper mapper = new ObjectMapper();
 		UserInfo userInfo = mapper.readValue(req.getHeader("userInfo"), UserInfo.class);
 		BookOrderDto bookOrder = mapper.readValue(req.getInputStream(), BookOrderDto.class);
-		BookUser bookUser=new BookUser();
-		bookUser.setBookId(Integer.parseInt(bookOrder.getBookId()));
-		bookUser.setBookStatus(bookOrder.getBookStatus());
-		bookUser.setBookTakenFor(Integer.parseInt(bookOrder.getBookTakenFor()));
-		bookUser.setUserId(userInfo.getId());
 		try {
 			BookUser bookOrderAlready=bookUserService.getByUserIdAndBook(userInfo.getId(), Integer.parseInt(bookOrder.getBookId()));
 			if(bookOrderAlready!=null) {
@@ -56,56 +50,30 @@ public class BookOrderController extends HttpServlet{
 				return;
 				
 		}
+			BookUser bookUser=new BookUser();
+			bookUser.setBookId(Integer.parseInt(bookOrder.getBookId()));
+			bookUser.setBookStatus(bookOrder.getBookStatus());
+			bookUser.setBookTakenFor(Integer.parseInt(bookOrder.getBookTakenFor()));
+			bookUser.setUserId(userInfo.getId());
 			Book book = bookService.get(Integer.parseInt(bookOrder.getBookId()));
 			book.setBookQty(book.getBookQty()-1);
-			BookUser bookUsers = bookUserService.findAll()
-					.stream()
-					.filter(bu->bu.getBookId()==Integer.parseInt(bookOrder.getBookId()) && (bu.getUserId()==userInfo.getId()))
-					.collect(Collectors.toList()).get(0);
-			if(bookUsers==null) {
-				if(bookUserService.save(bookUser) && bookService.update(book)) {
-					StandardResponse sr=new StandardResponse(HttpServletResponse.SC_OK, "Saved Successfully");
-					retunResponse(resp, sr);
-				}else {
-					StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Cannot Save Successfully");
-					retunResponse(resp, sr);
-				}}else {
-					StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "You Already have this book");
-					retunResponse(resp, sr);
-				}
-		} catch (SQLException e) {
-			StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Error In Data");
-			retunResponse(resp, sr);
-		}
-	}
-
-	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		BookUserService bookUserService=new BookUserServiceImpl();
-		ObjectMapper mapper = new ObjectMapper();
-		UserInfo userInfo = mapper.readValue(req.getHeader("userInfo"), UserInfo.class);
-		BookOrderDto bookOrder = mapper.readValue(req.getInputStream(), BookOrderDto.class);
-		try {
-			BookUser bookUser = bookUserService.findAll()
-					.stream()
-					.filter(bu->bu.getBookId()==Integer.parseInt(bookOrder.getBookId()) && (bu.getUserId()==userInfo.getId()))
-					.collect(Collectors.toList()).get(0);
-			bookUser.setBookTakenFor(Integer.parseInt(bookOrder.getBookTakenFor()));
-			if(bookUserService.update(bookUser)) {
-				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_OK, "Updated Successfully");
+			if(bookUserService.save(bookUser) && bookService.update(book)) {
+				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_OK, "Book Ordered Successfully");
 				retunResponse(resp, sr);
 			}else {
-				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Cannot Update");
+				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Cannot Save Successfully");
 				retunResponse(resp, sr);
 			}
-		} catch (SQLException e) {
-			StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Db connection failure");
-			retunResponse(resp, sr);
-
+	} catch (SQLException e) {
+		StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Error In Data");
+		retunResponse(resp, sr);
+	}}
+		else {
+			StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_FORBIDDEN, "Unable to order book");
+			retunResponse(resp, standardResponse);
 		}
-		
 	}
-
+	
 	private void retunResponse(HttpServletResponse resp, Object object) throws IOException {
 		Gson gson = new Gson();
 		String userJsonString = gson.toJson(object);
