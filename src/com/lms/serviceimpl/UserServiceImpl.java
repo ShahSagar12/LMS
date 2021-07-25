@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
 			}
 			bookRequest.setBookStatus(bookRequestDtos.getBookStatus());
 			bookRequest.setStudentName(bookRequestDtos.getStudentName());
-			bookRequest.setBookId(bookRequestDtos.getBookId());
+			bookRequest.setBookUserId(bookRequestDtos.getBookUserId());
 			bookRequest.setBookAuthor(bookRequestDtos.getBookAuthor());
 			bookRequest.setBookTitle(bookRequestDtos.getBookTitle());
 			bookRequest.setBookTakenAt(bookRequestDtos.getBookTakenAt());
