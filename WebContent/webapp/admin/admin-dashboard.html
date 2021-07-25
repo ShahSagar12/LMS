@@ -113,7 +113,7 @@
           <div class="card mb-3">
             <div class="card-header">
               <i class="fas fa-table"></i>
-              User</div>
+              Requested Books</div>
             <div class="card-body">
               <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -245,7 +245,7 @@
         						$("<td/>").html(data.bookStatus).appendTo($tr);
         						$tr.on("click", function() {
         							$this = $(this);
-        							popAcceptRejectBook($this.attr('data-id'));
+        							popAcceptRejectBook($this.attr('data-id'),data.bookStatus);
         						});
         						$tr.appendTo($table);
         						
@@ -280,7 +280,7 @@
 					icon : icons,
 					timer : 1000
 				});
-				document.getElementById("bookForm").reset();
+				setTimeout(loadPage, 1000);
 			},
 			error : function(e) {
 				swal({
@@ -311,7 +311,7 @@
 					icon : icons,
 					timer : 1000
 				});
-				document.getElementById("bookForm").reset();
+				setTimeout(loadPage, 1000);
 			},
 			error : function(e) {
 				swal({
@@ -326,9 +326,19 @@
     	
     });
     
-    function popAcceptRejectBook(id) {
-    	$("#bookUserAccept").modal('show');
-    	$("#bookUserId").val(id);
+    function popAcceptRejectBook(id,status) {
+    	if(status=='OnRequest' || status=='Onloan'){
+    		$("#bookUserAccept").modal('show');
+        	$("#bookUserId").val(id);	
+    	}
+    	else{
+    		swal({
+				text : "Book is not in OnRequest status",
+				icon:"warning",
+				button : "Ok",
+				timer : 2000
+			});
+    	}
 		}
 
     function logout(){
@@ -372,7 +382,9 @@
 
 		}
 
-
+    function loadPage(){
+		location.reload();
+	}
     
     </script>
 

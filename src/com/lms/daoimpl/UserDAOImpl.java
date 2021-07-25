@@ -122,7 +122,7 @@ public class UserDAOImpl implements UserDAO {
 	public boolean update(User user) throws SQLException {
 		boolean updated=false;
 		Connection connection=MySqlConnector.connectToDB();
-		String sql="Update user set id=?,firstname=?,lastname=?,email=?,password=?,roleid=? where id="+user.getId();
+		String sql="Update user set id=?,firstname=?,lastname=?,email=?,password=? where id="+user.getId();
 		try {
 			PreparedStatement preparedStatement=connection.prepareStatement(sql);
 			preparedStatement.setInt(1, user.getId());
@@ -130,7 +130,6 @@ public class UserDAOImpl implements UserDAO {
 			preparedStatement.setString(3, user.getLastName());
 			preparedStatement.setString(4, user.getEmail());
 			preparedStatement.setString(5, user.getUserPassword());
-			preparedStatement.setInt(6, user.getRoleid());
 			preparedStatement.executeUpdate();
 			updated=true;
 		}catch(Exception ex) {

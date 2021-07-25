@@ -51,10 +51,10 @@ public class SignupController extends HttpServlet{
 			user.setLastName(userDto.getLastName());
 			user.setEmail(userDto.getEmail());
 			user.setUserPassword(userDto.getPassword());
-			Role role = roleService.findByRole(userDto.getRegisterAs());
-			user.setRoleid(role.getRoleid());
 			if(userService.getByEmail(userDto.getEmail()).getId()==0) {
 				if(userDto.getId()==null) {
+					Role role = roleService.findByRole(userDto.getRegisterAs());
+					user.setRoleid(role.getRoleid());
 					if(userService.register(user)) {
 						StandardResponse sr=new StandardResponse(HttpServletResponse.SC_OK, "Saved Successfully");
 						retunResponse(resp, sr);
