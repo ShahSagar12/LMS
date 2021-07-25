@@ -31,6 +31,7 @@ public class BookReturnController extends HttpServlet{
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		if(!(req.getHeader("user-info").equals("null"))) {
 		try {
 			BookUserService bookUserService=new BookUserServiceImpl();
 			BookService bookService=new BookServiceImpl();
@@ -51,7 +52,12 @@ public class BookReturnController extends HttpServlet{
 			StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Connection Error");
 			retunResponse(resp, sr);
 
+		}}
+		else {
+			StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_FORBIDDEN, "Unable to return books");
+			retunResponse(resp, standardResponse);
 		}
+		
 	}
 	private void retunResponse(HttpServletResponse resp, Object object) throws IOException {
 		Gson gson = new Gson();

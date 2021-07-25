@@ -25,6 +25,7 @@ public class UserController extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		if(!(req.getHeader("user-info").equals("null"))) {
 		UserService userService=new UserServiceImpl();
 		int parameterValues = req.getParameter("id")==null?0:Integer.parseInt(req.getParameter("id"));
 		try {
@@ -36,7 +37,11 @@ public class UserController extends HttpServlet {
 			
 		} catch (IOException | SQLException e) {
 			e.printStackTrace();
-		} 
+		} }
+		else {
+			StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_FORBIDDEN, "Unable to get user");
+			retunResponse(resp, standardResponse);
+		}
 	}
 	
 	private void retunResponse(HttpServletResponse resp, Object object) throws IOException {

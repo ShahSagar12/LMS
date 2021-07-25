@@ -215,7 +215,7 @@
 						<input type="hidden" id="book-id" />
 						<button type="submit" class="btn btn-secondary"
 							data-bs-dismiss="modal">Close</button>
-						<button type="submit" class="btn btn-danger" id="btn-delete" onclick=deleteBook()>Delete</button>
+						<button type="button" class="btn btn-danger" id="btn-delete" onclick=deleteBook()>Delete</button>
 						<button type="button" class="btn btn-primary" id="btn-edit-save" onclick=saveChanges()>Save
 							Changes</button>
 					</div>
@@ -287,7 +287,7 @@
 					$.each(data, function(i, book) {
 						var $tr = $("<tr data-id='"+book.bookId+"'/>").css(
 								"cursor", "pointer");
-						$("<td/>").html(book.bookId).appendTo($tr);
+						$('<td style="display:none;"/>').html(book.bookId).appendTo($tr);
 						$("<td/>").html(book.bookTitle).appendTo($tr);
 						$("<td data-title='name'/>").html(book.bookAuthor)
 								.appendTo($tr);
