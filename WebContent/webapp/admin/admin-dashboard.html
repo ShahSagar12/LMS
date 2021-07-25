@@ -170,11 +170,7 @@
           <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-<<<<<<< HEAD
-            <a class="btn btn-primary" href="/lms/logout" onclick=logout()>Logout</a>
-=======
             <a class="btn btn-primary" onclick=logout()>Logout</a>
->>>>>>> f1b158cae099c66d3c038a16b28f8463412e2f16
           </div>
         </div>
       </div>
@@ -208,7 +204,7 @@
     $(document).ready(
     		function() {
     			if(localStorage.getItem("userInfo")){
-<<<<<<< HEAD
+
     				$.ajax({
         				type : "GET",
         				url : baseUrl +"/book/request",
@@ -243,61 +239,9 @@
     				window.location.href="/lms";
     			}
     			});
-=======
-        		$.ajax({
-    				type : "GET",
-    				url : baseUrl +"/users/all",
-    				headers: { 'user-info':  localStorage.getItem("userInfo")},
-    				success : function(data) {
-    					$table = $("#dataTable");
-    					$.each(data, function(i, user) {
-    						var $tr = $("<tr data-id='"+user.id+"'/>").css(
-    								"cursor", "pointer");
-    						$("<td/>").html(user.firstName).appendTo($tr);
-    						$("<td data-title='name'/>").html(user.lastName)
-    								.appendTo($tr);
-    						$("<td/>").html(user.email).appendTo($tr);
-    						$tr.on("click", function() {
-    							$this = $(this);
-    							populateUser($this.attr('data-id'));
-    						});
-    						$tr.appendTo($table);
-    					});
-    		
-    				},
-    				error : function(e) {
-    					swal({
-    						text : "Wrong Credentials",
-    						icon:"warning",
-    						button : Ok,
-    						timer : 2000
-    					});
-    				}
 
-    			});
-    			}
-    			else{
-    				window.location.href="/lms";
-    			}
-				/* $.getJSON(baseUrl+"/users/all", function(data) {
-					$table = $("#dataTable");
-					$.each(data, function(i, user) {
-						var $tr = $("<tr data-id='"+user.id+"'/>").css(
-								"cursor", "pointer");
-						$("<td/>").html(user.firstName).appendTo($tr);
-						$("<td data-title='name'/>").html(user.lastName)
-								.appendTo($tr);
-						$("<td/>").html(user.email).appendTo($tr);
-						$tr.on("click", function() {
-							$this = $(this);
-						});
-						$tr.appendTo($table);
+		
 
-					});
-
-				}); */
-			});
->>>>>>> f1b158cae099c66d3c038a16b28f8463412e2f16
     
    
     function logout(){
@@ -305,10 +249,7 @@
 		window.location.href="/lms";
 	}
 	
-	
-<<<<<<< HEAD
-=======
-}
+
     function myFunction() {
 
 		  // Declare variables 
@@ -344,7 +285,7 @@
 
 		}
 
->>>>>>> f1b158cae099c66d3c038a16b28f8463412e2f16
+
     
     </script>
 
