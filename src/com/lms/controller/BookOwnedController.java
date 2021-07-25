@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.lms.entity.User;
 import com.lms.model.UserInfo;
 import com.lms.model.dtos.BookOrderDto;
+import com.lms.model.response.StandardResponse;
 import com.lms.service.BookService;
 import com.lms.serviceimpl.BookServiceImpl;
 
@@ -28,7 +29,7 @@ public class BookOwnedController extends HttpServlet{
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		
+		if(!(req.getHeader("user-info").equals("null"))) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			UserInfo userInfo = mapper.readValue(req.getHeader("userInfo"), UserInfo.class);
@@ -36,7 +37,11 @@ public class BookOwnedController extends HttpServlet{
 			retunResponse(resp, bookService.getBookOwnedByUser(userInfo.getId()));
 		} catch (IOException | SQLException e) {
 			e.printStackTrace();
-		} 
+		} }
+		else {
+			StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_FORBIDDEN, "Unable to get owned books");
+			retunResponse(resp, standardResponse);
+		}
 	}
 	
 	private void retunResponse(HttpServletResponse resp, Object object) throws IOException {

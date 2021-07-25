@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.lms.entity.BookUser;
 import com.lms.model.dtos.BookOrderDto;
+import com.lms.model.response.StandardResponse;
 import com.lms.service.BookService;
 import com.lms.serviceimpl.BookServiceImpl;
 
@@ -27,6 +28,7 @@ public class BookListController extends HttpServlet{
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		if(!(req.getHeader("user-info").equals("null"))) {
 		BookService bookService=new BookServiceImpl();
 		int parameterValues = req.getParameter("id")==null?0:Integer.parseInt(req.getParameter("id"));
 		try {
@@ -37,7 +39,12 @@ public class BookListController extends HttpServlet{
 			}
 		} catch (IOException | SQLException e) {
 			e.printStackTrace();
-		} 
+		} }
+		else {
+			StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_FORBIDDEN, "Unable to get book");
+			retunResponse(resp, standardResponse);
+		}
+		
 	}
 
 	private void retunResponse(HttpServletResponse resp, Object object) throws IOException {

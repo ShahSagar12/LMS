@@ -42,7 +42,8 @@ public class AdminController extends HttpServlet{
 	}
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		    int id = req.getParameter("id")==null?0:Integer.parseInt(req.getParameter("id"));
+	if(!(req.getHeader("user-info").equals("null"))) {
+	int id = req.getParameter("id")==null?0:Integer.parseInt(req.getParameter("id"));
 		    try {
 				boolean isDeleted=new BookServiceImpl().delete(id);
 				if(isDeleted) {
@@ -54,12 +55,18 @@ public class AdminController extends HttpServlet{
 				StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Unable to delete");
 				retunResponse(resp, standardResponse);
 				// TODO Auto-generated catch block
-			}
+			}}
+     else {
+	StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_FORBIDDEN, "Unable to delete");
+	retunResponse(resp, standardResponse);
+	
+        }
 		
 	}
 	
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		if(!(req.getHeader("user-info").equals("null"))) {
 		ObjectMapper mapper = new ObjectMapper();
 		UserInfo userInfo = mapper.readValue(req.getHeader("user-info"), UserInfo.class);
 		System.out.println(userInfo);
@@ -75,11 +82,18 @@ public class AdminController extends HttpServlet{
 			e.printStackTrace();
 			StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Cannot update book");
 			retunResponse(resp, standardResponse);
-		}
+		}}
+		
+			else {
+				StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_FORBIDDEN, "Unable to update");
+				retunResponse(resp, standardResponse);
+				}
+		
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		if(!(req.getHeader("user-info").equals("null"))) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			UserInfo userInfo = mapper.readValue(req.getHeader("user-info"), UserInfo.class);
@@ -107,6 +121,10 @@ public class AdminController extends HttpServlet{
 		}catch(SQLException exp){
 			StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Cannot Save Object");
 			retunResponse(resp, standardResponse);
+		}}
+		else {
+			StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_FORBIDDEN, "Unable to save book");
+			retunResponse(resp, standardResponse);	
 		}
 		
 	}
