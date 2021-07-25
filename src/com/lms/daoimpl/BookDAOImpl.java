@@ -185,6 +185,7 @@ public class BookDAOImpl implements BookDAO {
 				bookowned.setBookTitle(resultSet.getString("booktitle"));
 				bookowned.setBookAuthor(resultSet.getString("bookauthor"));
 				bookowned.setBookTakenAt(resultSet.getString("booktakenat"));
+				bookowned.setBookOwnedStatus(resultSet.getString("bookstatus"));
 				bookowned.setBookTakenFor(Integer.parseInt(resultSet.getString("booktakenfor")));
 				bookowned.setUserId(userId);
 				list.add(bookowned);

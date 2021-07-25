@@ -55,6 +55,7 @@ public class BookOrderController extends HttpServlet{
 			bookUser.setBookStatus(bookOrder.getBookStatus());
 			bookUser.setBookTakenFor(Integer.parseInt(bookOrder.getBookTakenFor()));
 			bookUser.setUserId(userInfo.getId());
+			bookUser.setBookStatus("OnRequest");
 			Book book = bookService.get(Integer.parseInt(bookOrder.getBookId()));
 			book.setBookQty(book.getBookQty()-1);
 			if(bookUserService.save(bookUser) && bookService.update(book)) {

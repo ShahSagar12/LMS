@@ -9,6 +9,7 @@ public class BookOwnedDto {
 	private int bookTakenFor;
 	private Long remainingDays;
 	private String fineCalibrated;
+	private String bookOwnedStatus;
 	
 	public BookOwnedDto() {
 		
@@ -18,6 +19,12 @@ public class BookOwnedDto {
 	}
 	public void setBookId(int bookId) {
 		this.bookId = bookId;
+	}
+	public String getBookOwnedStatus() {
+		return bookOwnedStatus;
+	}
+	public void setBookOwnedStatus(String bookOwnedStatus) {
+		this.bookOwnedStatus = bookOwnedStatus;
 	}
 	public int getUserId() {
 		return userId;

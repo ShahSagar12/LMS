@@ -110,6 +110,7 @@
 									<th>Book Author</th>
 									<th>Book Taken at</th>
 									<th>Book Taken for</th>
+									<th>Status</th>
 									<th>Days Remaining</th>
 									<th>Calibrated Fine</th>
 								</tr>
@@ -225,6 +226,7 @@
 								.appendTo($tr);
 						$("<td/>").html(book.bookTakenAt).appendTo($tr);
 						$("<td/>").html(book.bookTakenFor).appendTo($tr);
+						$("<td/>").html(book.bookOwnedStatus).appendTo($tr);
 						$("<td/>").html(book.remainingDays).appendTo($tr);
 						$("<td/>").html(book.fineCalibrated).appendTo($tr);
 						$tr.on("click", function() {
@@ -257,6 +259,7 @@
 				type : "POST",
 				url : baseUrl +"return/book?book-id="+bookId,
 				contentType : "application/json",
+				headers: { 'user-info': localStorage.getItem("userInfo") },
 				dataType : "json",
 				success : function(result) {
 					swal({
@@ -285,6 +288,7 @@
 			$.ajax({
 					type : "GET",
 					url : baseUrl+"books/all?id="+id,
+					headers: { 'user-info': localStorage.getItem("userInfo") },
 					success : function(data) {
 						$("#book-id").val(data.bookId);
 						$("#return-book-dialog").modal('show');

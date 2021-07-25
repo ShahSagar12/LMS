@@ -8,6 +8,7 @@ public class BookOwned {
 	private int bookTakenFor;
 	private String bookTitle;
 	private String bookAuthor;
+	private String bookOwnedStatus;
 	
 	public BookOwned() {
 		
@@ -20,7 +21,12 @@ public class BookOwned {
 	public void setId(int id) {
 		this.id = id;
 	}
-
+	public String getBookOwnedStatus() {
+		return bookOwnedStatus;
+	}
+	public void setBookOwnedStatus(String bookOwnedStatus) {
+		this.bookOwnedStatus = bookOwnedStatus;
+	}
 	public int getBookId() {
 		return bookId;
 	}

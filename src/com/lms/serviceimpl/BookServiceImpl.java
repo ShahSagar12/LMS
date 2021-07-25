@@ -66,6 +66,7 @@ public class BookServiceImpl implements BookService{
 				LOGGER.info("Date cannot be Parsed");
 			}
 			bookOwnedDto.setUserId(bookowned.getUserId());
+			bookOwnedDto.setBookOwnedStatus(bookowned.getBookOwnedStatus());
 			bookOwnedDto.setBookId(bookowned.getBookId());
 			bookOwnedDto.setBookAuthor(bookowned.getBookAuthor());
 			bookOwnedDto.setBookTitle(bookowned.getBookTitle());
