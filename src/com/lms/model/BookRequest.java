@@ -2,7 +2,7 @@ package com.lms.model;
 
 public class BookRequest {
 	
-	private int bookId;
+	private int bookUserId;
 	private String studentName;
 	private String bookTitle;
 	private String bookAuthor;
@@ -15,12 +15,15 @@ public class BookRequest {
 	public BookRequest() {
 	
 	}
-	public int getBookId() {
-		return bookId;
+	
+	public int getBookUserId() {
+		return bookUserId;
 	}
-	public void setBookId(int bookId) {
-		this.bookId = bookId;
+
+	public void setBookUserId(int bookUserId) {
+		this.bookUserId = bookUserId;
 	}
+
 	public String getStudentName() {
 		return studentName;
 	}
@@ -70,9 +73,9 @@ public class BookRequest {
 		this.calibratedFine = d;
 	}
 	
-	public BookRequest(int bookId, String studentName, String bookTitle, String bookAuthor, String bookTakenAt,
+	public BookRequest(int bookUserId, String studentName, String bookTitle, String bookAuthor, String bookTakenAt,
 			int bookTakenFor, String bookStatus, Long remainingDays, double calibratedFine) {
-		this.bookId = bookId;
+		this.bookUserId = bookUserId;
 		this.studentName = studentName;
 		this.bookTitle = bookTitle;
 		this.bookAuthor = bookAuthor;
@@ -85,7 +88,7 @@ public class BookRequest {
 	
 	@Override
 	public String toString() {
-		return "BookRequest [bookId=" + bookId + ", studentName=" + studentName + ", bookTitle=" + bookTitle
+		return "BookRequest [bookUserId=" + bookUserId + ", studentName=" + studentName + ", bookTitle=" + bookTitle
 				+ ", bookAuthor=" + bookAuthor + ", bookTakenAt=" + bookTakenAt + ", bookTakenFor=" + bookTakenFor
 				+ ", bookStatus=" + bookStatus + ", remainingDays=" + remainingDays + ", calibratedFine="
 				+ calibratedFine + "]";

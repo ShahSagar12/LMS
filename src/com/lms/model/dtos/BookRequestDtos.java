@@ -1,7 +1,8 @@
 package com.lms.model.dtos;
 
 public class BookRequestDtos {
-	private int bookId;
+	
+	private int bookUserId;
 	private String studentName;
 	private String bookTitle;
 	private String bookAuthor;
@@ -12,12 +13,15 @@ public class BookRequestDtos {
 	public BookRequestDtos() {
 		// TODO Auto-generated constructor stub
 	}
-	public int getBookId() {
-		return bookId;
+	
+	public int getBookUserId() {
+		return bookUserId;
 	}
-	public void setBookId(int bookId) {
-		this.bookId = bookId;
+
+	public void setBookUserId(int bookUserId) {
+		this.bookUserId = bookUserId;
 	}
+
 	public String getStudentName() {
 		return studentName;
 	}
@@ -55,19 +59,10 @@ public class BookRequestDtos {
 		this.bookStatus = bookStatus;
 	}
 	
-	public BookRequestDtos(int bookId, String studentName, String bookTitle, String bookAuthor, String bookTakenAt,
-			int bookTakenFor, String bookStatus) {
-		this.bookId = bookId;
-		this.studentName = studentName;
-		this.bookTitle = bookTitle;
-		this.bookAuthor = bookAuthor;
-		this.bookTakenAt = bookTakenAt;
-		this.bookTakenFor = bookTakenFor;
-		this.bookStatus = bookStatus;
-	}
+	
 	@Override
 	public String toString() {
-		return "BookRequestDtos [bookId=" + bookId + ", studentName=" + studentName + ", bookTitle=" + bookTitle
+		return "BookRequestDtos [bookUserId=" + bookUserId + ", studentName=" + studentName + ", bookTitle=" + bookTitle
 				+ ", bookAuthor=" + bookAuthor + ", bookTakenAt=" + bookTakenAt + ", bookTakenFor=" + bookTakenFor
 				+ ", bookStatus=" + bookStatus + "]";
 	}

@@ -155,7 +155,27 @@
       <i class="fas fa-angle-up"></i>
     </a>
     
-    
+    <!-- Logout Modal-->
+    <div class="modal fade" id="bookUserAccept" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+      <form>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Accept/Reject</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">Select "Reject" below if you don't want user to take this book</div>
+          <div class="modal-footer">
+           <input type="hidden" id="bookUserId"/>
+            <button class="btn btn-danger" type="button"  id="btn-reject">Reject</button>
+            <button class="btn btn-primary" type="button"  id="btn-accept">Accept</Button>
+          </div>
+        </div>
+        </form>
+      </div>
+    </div>
 
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -212,7 +232,7 @@
         				success : function(data) {
         					$table = $("#dataTable");
         					$.each(data, function(i, data) {
-        						var $tr = $("<tr data-id='"+data.bookId+"'/>").css(
+        						var $tr = $("<tr data-id='"+data.bookUserId+"'/>").css(
         								"cursor", "pointer");
         						$("<td/>").html(data.studentName).appendTo($tr);
         						$("<td/>").html(data.bookTitle).appendTo($tr);
@@ -225,8 +245,10 @@
         						$("<td/>").html(data.bookStatus).appendTo($tr);
         						$tr.on("click", function() {
         							$this = $(this);
+        							popAcceptRejectBook($this.attr('data-id'));
         						});
         						$tr.appendTo($table);
+        						
         					});
         		
         				},
@@ -235,15 +257,80 @@
         				}
 
         			});
+    				
     			}else{
     				window.location.href="/lms";
     			}
     			});
-
-		
-
     
-   
+    $('#btn-reject').on('click',function(){
+    	bookUserId=$("#bookUserId").val();
+    	$("#bookUserAccept").modal('hide');
+    	$.ajax({
+			type : "POST",
+			url : baseUrl +"/bookrequest/reject?id="+bookUserId,
+			headers: { 'user-info':  localStorage.getItem("userInfo")},
+			contentType : "application/json",
+			dataType : "json",
+			success : function(result) {
+				icons=result.status===200?"success":"warning";
+				swal({
+					text : result.message,
+					button : false,
+					icon : icons,
+					timer : 1000
+				});
+				document.getElementById("bookForm").reset();
+			},
+			error : function(e) {
+				swal({
+					text : "Cannot Saved",
+					icon:"warning",
+					button : "Ok",
+					timer : 2000
+				});
+			}
+
+		});
+    });
+    
+    $('#btn-accept').on('click',function(){
+    	bookUserId=$("#bookUserId").val();
+    	$("#bookUserAccept").modal('hide');
+    	$.ajax({
+			type : "POST",
+			url : baseUrl +"/bookrequest/accept?id="+bookUserId,
+			headers: { 'user-info':  localStorage.getItem("userInfo")},
+			contentType : "application/json",
+			dataType : "json",
+			success : function(result) {
+				icons=result.status===200?"success":"warning";
+				swal({
+					text : result.message,
+					button : false,
+					icon : icons,
+					timer : 1000
+				});
+				document.getElementById("bookForm").reset();
+			},
+			error : function(e) {
+				swal({
+					text : "Cannot Saved",
+					icon:"warning",
+					button : "Ok",
+					timer : 2000
+				});
+			}
+
+		});
+    	
+    });
+    
+    function popAcceptRejectBook(id) {
+    	$("#bookUserAccept").modal('show');
+    	$("#bookUserId").val(id);
+		}
+
     function logout(){
 		localStorage.removeItem("userInfo");
 		window.location.href="/lms";
