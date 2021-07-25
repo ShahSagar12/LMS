@@ -11,6 +11,8 @@ import java.util.logging.Logger;
 import com.lms.dao.UserDAO;
 import com.lms.dbutils.MySqlConnector;
 import com.lms.entity.User;
+import com.lms.model.BookOwned;
+import com.lms.model.dtos.BookRequestDtos;
 
 public class UserDAOImpl implements UserDAO {
 	private static final Logger LOGGER = Logger.getLogger(UserDAOImpl.class.getName());
@@ -120,7 +122,7 @@ public class UserDAOImpl implements UserDAO {
 	public boolean update(User user) throws SQLException {
 		boolean updated=false;
 		Connection connection=MySqlConnector.connectToDB();
-		String sql="Update user set id=? AND firstname=? AND lastname=? AND email=? AND password=? AND roleid=?";
+		String sql="Update user set id=?,firstname=?,lastname=?,email=?,password=?,roleid=? where id="+user.getId();
 		try {
 			PreparedStatement preparedStatement=connection.prepareStatement(sql);
 			preparedStatement.setInt(1, user.getId());
@@ -138,16 +140,42 @@ public class UserDAOImpl implements UserDAO {
 		}
 		return updated;
 	}
+	
+	@Override
+	public List<BookRequestDtos> getBookOwnerByOfAdmin(int adminId) throws SQLException {
+		List<BookRequestDtos> list=new ArrayList<>();
+		Connection connection=MySqlConnector.connectToDB();
+		String sql="SELECT bu.bookstatus,bu.booktakenat,bu.booktakenfor,bk.booktitle,bk.bookauthor,u.firstname,u.lastname FROM bookuser bu INNER JOIN book bk on bu.bookid=bk.bookid INNER JOIN user u on bu.userid=u.id INNER JOIN user admin on bk.adminid=admin.id where admin.id="+adminId;
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			ResultSet resultSet=preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				BookRequestDtos bookRequestDtos=new BookRequestDtos();
+				bookRequestDtos.setBookTitle(resultSet.getString("booktitle"));
+				bookRequestDtos.setBookAuthor(resultSet.getString("bookauthor"));
+				bookRequestDtos.setBookTakenAt(resultSet.getString("booktakenat"));
+				bookRequestDtos.setBookTakenFor(Integer.parseInt(resultSet.getString("booktakenfor")));
+				bookRequestDtos.setBookStatus(resultSet.getString("bookstatus"));
+				bookRequestDtos.setStudentName(resultSet.getString("firstname")+" "+resultSet.getString("lastname"));
+				list.add(bookRequestDtos);
+			}
+		} catch (Exception ex) {
+			LOGGER.info("Error Getting All book "+ex.getMessage());
+		}finally {
+			connection.close();
+		}
+		return list;
+	}
 
 	@Override
 	public boolean delete(int id) throws SQLException {
 		boolean exists=false;
 		Connection connection=MySqlConnector.connectToDB();
-		String sql="DELETE user WHERE id=?";
+		String sql="DELETE from user WHERE id=?";
 		try {
 			PreparedStatement preparedStatement=connection.prepareStatement(sql);
 			preparedStatement.setInt(1,id);
-			preparedStatement.executeQuery();
+			preparedStatement.executeUpdate();
 			exists=true;
 		}catch(Exception ex) {
 			LOGGER.info("ERROR:Deleting user :"+ex.getMessage());

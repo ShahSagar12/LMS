@@ -118,14 +118,9 @@
               <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <tr>
-                      <th>Student Name</th>
-                      <th>Book Title</th>
-                      <th>Book Author</th>
-                      <th>Book Taken At</th>
-                      <th>Book Taken for</th>
-                      <th>Remaining Days</th>
-                      <th>Calibrated Fine</th>
-                      <th>Status</th>
+                      <th>First name</th>
+                      <th>Last name</th>
+                      <th>Email</th>
                     </tr>
                 </table>
               </div>
@@ -155,7 +150,64 @@
       <i class="fas fa-angle-up"></i>
     </a>
     
-    
+    <!--Edit Modal -->
+	<div class="modal fade" id="user-dialog" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form title="Add Book" class="form">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">User</h5>
+					</div>
+					<div class="modal-body">
+						<div class="row mb-3">
+							<label for="first-name" class="col-sm-2 col-form-label">First Name</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="first-name" required>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<label for="last-name" class="col-sm-2 col-form-label">Last Name</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="last-name"
+									required>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<label for="email" class="col-sm-2 col-form-label">Email</label>
+							<div class="col-sm-10">
+								<input type="email" class="form-control" id="email"
+									required>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<label for="password" class="col-sm-2 col-form-label ">Password
+								</label>
+							<div class="col-sm-10">
+									<input type='password' class="form-control" id='password'
+										required /> <span class="input-group-addon">
+									</span>
+							</div>
+						</div>
+						<div class="col-auto">
+							<label for="autoSizingSelect">Register As</label>
+							<select class="form-select" id="register-as">
+								<option value="Admin">Admin</option>
+								<option value="User" selected>User</option>
+							</select>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<input type="hidden" id="id" />
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-danger" id="btn-delete">Delete</button>
+						<button type="button" class="btn btn-primary" id="btn-edit-user">Edit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -170,7 +222,7 @@
           <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="/lms/logout" onclick=logout()>Logout</a>
+            <a class="btn btn-primary" href="/lms/logout">Logout</a>
           </div>
         </div>
       </div>
@@ -199,49 +251,160 @@
     
     $(document).ready(
     		function() {
-    			if(localStorage.getItem("userInfo")){
-    				$.ajax({
-        				type : "GET",
-        				url : baseUrl +"/book/request",
-        				headers: { 'user-info':  localStorage.getItem("userInfo")},
-        				success : function(data) {
-        					$table = $("#dataTable");
-        					$.each(data, function(i, data) {
-        						var $tr = $("<tr data-id='"+data.bookId+"'/>").css(
-        								"cursor", "pointer");
-        						$("<td/>").html(data.studentName).appendTo($tr);
-        						$("<td/>").html(data.bookTitle).appendTo($tr);
-        						$("<td data-title='name'/>").html(data.bookAuthor)
-        								.appendTo($tr);
-        						$("<td/>").html(data.bookTakenAt).appendTo($tr);
-        						$("<td/>").html(data.bookTakenFor).appendTo($tr);
-        						$("<td/>").html(data.remainingDays).appendTo($tr);
-        						$("<td/>").html(data.calibratedFine).appendTo($tr);
-        						$("<td/>").html(data.bookStatus).appendTo($tr);
-        						$tr.on("click", function() {
-        							$this = $(this);
-        						});
-        						$tr.appendTo($table);
-        					});
-        		
-        				},
-        				error : function(e) {
-        
-        				}
+        		$.ajax({
+    				type : "GET",
+    				url : baseUrl +"/users/all",
+    				headers: { 'user-info':  localStorage.getItem("userInfo")},
+    				success : function(data) {
+    					$table = $("#dataTable");
+    					$.each(data, function(i, user) {
+    						var $tr = $("<tr data-id='"+user.id+"'/>").css(
+    								"cursor", "pointer");
+    						$("<td/>").html(user.firstName).appendTo($tr);
+    						$("<td data-title='name'/>").html(user.lastName)
+    								.appendTo($tr);
+    						$("<td/>").html(user.email).appendTo($tr);
+    						$tr.on("click", function() {
+    							$this = $(this);
+    							populateUser($this.attr('data-id'));
+    						});
+    						$tr.appendTo($table);
+    					});
+    		
+    				},
+    				error : function(e) {
+    					swal({
+    						text : "Wrong Credentials",
+    						icon:"warning",
+    						button : Ok,
+    						timer : 2000
+    					});
+    				}
 
-        			});
-    			}else{
-    				window.location.href="/lms";
-    			}
     			});
+				/* $.getJSON(baseUrl+"/users/all", function(data) {
+					$table = $("#dataTable");
+					$.each(data, function(i, user) {
+						var $tr = $("<tr data-id='"+user.id+"'/>").css(
+								"cursor", "pointer");
+						$("<td/>").html(user.firstName).appendTo($tr);
+						$("<td data-title='name'/>").html(user.lastName)
+								.appendTo($tr);
+						$("<td/>").html(user.email).appendTo($tr);
+						$tr.on("click", function() {
+							$this = $(this);
+						});
+						$tr.appendTo($table);
+
+					});
+
+				}); */
+				
+				
+				
+				
+			});
     
-   
+    function populateUser(id) {
+		
+		$.ajax({
+			type : "GET",
+			url : baseUrl +"/users/all?id="+id,
+			success : function(data) {
+				$("#id").val(id);
+				$("#first-name").val(data.firstName);
+				$("#last-name").val(data.lastName);
+				$("#email").val(data.email);
+				$("#password").val(data.userPassword);
+				$("#role-id").val(data.roleId);
+				$("#user-dialog").modal('show');
+	
+			},
+			
+		});
+			
+}
     function logout(){
 		localStorage.removeItem("userInfo");
 		window.location.href="/lms";
 	}
 	
+	if(localStorage.getItem("userInfo")){
+		
+	$('#btn-edit-user').on('click',function(){
+		$("#user-dialog").modal('hide');
+		var formdata = {
+				id:$('#id').val(),
+				firstName : $('#first-name').val(),
+				lastName : $('#last-name').val(),
+				email : $('#email').val(),
+				password : $('#password').val(),
+				registeras:$('#register-as').val()
+			};
+		
+			$.ajax({
+				type : "POST",
+				url : baseUrl + "signup",
+				contentType : "application/json",
+				data : JSON.stringify(formdata),
+				dataType : "json",
+				success : function(result) {
+					icons=result.status===200?"success":"warning";
+					swal({
+						text : result.message,
+						button : false,
+						icon : icons,
+						timer : 1000
+					});
+					document.getElementById("userForm").reset();
+				},
+				error : function(e) {
+					swal({
+						text : "Cannot Saved",
+						icon:"warning",
+						button : Ok,
+						timer : 2000
+					});
+				}
+
+			});
+		
+	});
 	
+	
+	$('#btn-delete').on('click',function(){
+		$("#user-dialog").modal('hide');
+		var id=$('#id').val();
+			$.ajax({
+				type : "DELETE",
+				url : baseUrl + "signup?id="+id,
+				contentType : "application/json",
+				dataType : "json",
+				success : function(result) {
+					icons=result.status===200?"success":"warning";
+					swal({
+						text : result.message,
+						button : false,
+						icon : icons,
+						timer : 1000
+					});
+					document.getElementById("userForm").reset();
+				},
+				error : function(e) {
+					swal({
+						text : "Cannot Saved",
+						icon:"warning",
+						button : Ok,
+						timer : 2000
+					});
+				}
+
+			});
+		
+	});
+	}else{
+		window.location.href="/lms";
+	}
     
     </script>
 

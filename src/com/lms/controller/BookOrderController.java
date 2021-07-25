@@ -3,6 +3,8 @@ package com.lms.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -46,23 +48,58 @@ public class BookOrderController extends HttpServlet{
 		bookUser.setBookStatus(bookOrder.getBookStatus());
 		bookUser.setBookTakenFor(Integer.parseInt(bookOrder.getBookTakenFor()));
 		bookUser.setUserId(userInfo.getId());
-		
+
 		try {
 			Book book = bookService.get(Integer.parseInt(bookOrder.getBookId()));
 			book.setBookQty(book.getBookQty()-1);
-			if(bookUserService.save(bookUser) && bookService.update(book)) {
-				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_OK, "Saved Successfully");
+			BookUser bookUsers = bookUserService.findAll()
+					.stream()
+					.filter(bu->bu.getBookId()==Integer.parseInt(bookOrder.getBookId()) && (bu.getUserId()==userInfo.getId()))
+					.collect(Collectors.toList()).get(0);
+			if(bookUsers==null) {
+				if(bookUserService.save(bookUser) && bookService.update(book)) {
+					StandardResponse sr=new StandardResponse(HttpServletResponse.SC_OK, "Saved Successfully");
+					retunResponse(resp, sr);
+				}else {
+					StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Cannot Save Successfully");
+					retunResponse(resp, sr);
+				}}else {
+					StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "You Already have this book");
+					retunResponse(resp, sr);
+				}
+		} catch (SQLException e) {
+			StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Error In Data");
+			retunResponse(resp, sr);
+		}
+	}
+
+	@Override
+	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		BookUserService bookUserService=new BookUserServiceImpl();
+		ObjectMapper mapper = new ObjectMapper();
+		UserInfo userInfo = mapper.readValue(req.getHeader("userInfo"), UserInfo.class);
+		BookOrderDto bookOrder = mapper.readValue(req.getInputStream(), BookOrderDto.class);
+		try {
+			BookUser bookUser = bookUserService.findAll()
+					.stream()
+					.filter(bu->bu.getBookId()==Integer.parseInt(bookOrder.getBookId()) && (bu.getUserId()==userInfo.getId()))
+					.collect(Collectors.toList()).get(0);
+			bookUser.setBookTakenFor(Integer.parseInt(bookOrder.getBookTakenFor()));
+			if(bookUserService.update(bookUser)) {
+				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_OK, "Updated Successfully");
 				retunResponse(resp, sr);
 			}else {
-				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Cannot Save Successfully");
+				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Cannot Update");
 				retunResponse(resp, sr);
 			}
-	} catch (SQLException e) {
-		StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Error In Data");
-		retunResponse(resp, sr);
+		} catch (SQLException e) {
+			StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Db connection failure");
+			retunResponse(resp, sr);
+
+		}
+		
 	}
-	}
-	
+
 	private void retunResponse(HttpServletResponse resp, Object object) throws IOException {
 		Gson gson = new Gson();
 		String userJsonString = gson.toJson(object);

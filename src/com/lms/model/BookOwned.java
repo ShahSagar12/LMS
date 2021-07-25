@@ -1,6 +1,7 @@
 package com.lms.model;
 
 public class BookOwned {
+	private int id;
 	private int bookId;
 	private int userId;
 	private String bookTakenAt;
@@ -11,6 +12,15 @@ public class BookOwned {
 	public BookOwned() {
 		
 	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public int getBookId() {
 		return bookId;
 	}

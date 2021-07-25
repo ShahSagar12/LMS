@@ -50,10 +50,12 @@ public class BookUserDAOImpl implements BookUserDAO{
 			ResultSet resultSet=preparedStatement.executeQuery();
 			while(resultSet.next()) {
 				BookUser bookUser=new BookUser();
+				bookUser.setId(Integer.parseInt(resultSet.getString("id")));
 				bookUser.setBookId(resultSet.getInt("bookid"));
 				bookUser.setUserId(Integer.parseInt(resultSet.getString("userid")));
 				bookUser.setBookTakenAt(resultSet.getString("booktakenat"));
 				bookUser.setBookTakenFor(Integer.parseInt(resultSet.getString("booktakenfor")));
+				bookUser.setBookStatus(resultSet.getString("bookstatus"));
 				list.add(bookUser);
 			}
 		} catch (Exception ex) {
@@ -98,7 +100,7 @@ public class BookUserDAOImpl implements BookUserDAO{
 			preparedStatement.setInt(1, bookUser.getBookId());
 			preparedStatement.setInt(2, bookUser.getUserId());
 			preparedStatement.setString(3, bookUser.getBookStatus());
-			preparedStatement.setString(4, formatter(new Date()));
+			preparedStatement.setString(4, bookUser.getBookTakenAt());
 			preparedStatement.setInt(5, bookUser.getBookTakenFor());
 			preparedStatement.executeUpdate();
 			exists=true;

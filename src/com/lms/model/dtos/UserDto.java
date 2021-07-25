@@ -3,6 +3,8 @@ package com.lms.model.dtos;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserDto {
+	@JsonProperty("id")
+	private String id;
 	@JsonProperty("firstName")
 	private String firstName;
 	@JsonProperty("lastName")
@@ -16,7 +18,17 @@ public class UserDto {
 	public UserDto() {
 	
 	}
-	
+
+	public String getId() {
+		return id;
+	}
+
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+
 	public String getFirstName() {
 		return firstName;
 	}
@@ -55,6 +67,13 @@ public class UserDto {
 		this.password = password;
 		this.registerAs = registerAs;
 	}
+
+	@Override
+	public String toString() {
+		return "UserDto [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
+				+ ", password=" + password + ", registerAs=" + registerAs + "]";
+	}
+	
 
 	
 }

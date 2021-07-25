@@ -46,27 +46,58 @@ public class SignupController extends HttpServlet{
 			UserService userService=new UserServiceImpl();
 			RoleService roleService=new RoleServiceImpl();
 			User user=new User();
+
 			user.setFirstName(userDto.getFirstName());
 			user.setLastName(userDto.getLastName());
 			user.setEmail(userDto.getEmail());
 			user.setUserPassword(userDto.getPassword());
 			Role role = roleService.findByRole(userDto.getRegisterAs());
 			user.setRoleid(role.getRoleid());
-			System.out.println(userService.getByEmail(userDto.getEmail()));
 			if(userService.getByEmail(userDto.getEmail()).getId()==0) {
-				if(userService.register(user)) {
-					StandardResponse sr=new StandardResponse(HttpServletResponse.SC_OK, "Saved Successfully");
-					retunResponse(resp, sr);
-				}else {
-					StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Cannot Save Successfully");
-					retunResponse(resp, sr);
+				if(userDto.getId()==null) {
+					if(userService.register(user)) {
+						StandardResponse sr=new StandardResponse(HttpServletResponse.SC_OK, "Saved Successfully");
+						retunResponse(resp, sr);
+					}else {
+						StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Cannot Save");
+						retunResponse(resp, sr);
+					}
 				}
 			}else {
+				if(userDto.getId()!=null) {
+					user.setId(Integer.parseInt(userDto.getId()));
+					if(userService.update(user)) {
+						StandardResponse sr=new StandardResponse(HttpServletResponse.SC_OK, "Updated Successfully");
+						retunResponse(resp, sr);
+					}else {
+						StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Cannot Update");
+						retunResponse(resp, sr);
+					}
+				}
 				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Duplicate Email");
 				retunResponse(resp, sr);
 			}
 		} catch (SQLException e) {
 			StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Error In Data");
+			retunResponse(resp, sr);
+		}
+	}
+	
+	
+	@Override
+	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		UserService userService=new UserServiceImpl();
+		Integer userId=Integer.parseInt(req.getParameter("id"));
+		try {
+			if(userService.delete(userId)) {
+				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_OK, "Delete Successfully");
+				retunResponse(resp, sr);
+			}else {
+				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Cannot Delete");
+				retunResponse(resp, sr);
+			}
+		} catch (SQLException e) {
+			StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Error Database Connection");
 			retunResponse(resp, sr);
 		}
 	}

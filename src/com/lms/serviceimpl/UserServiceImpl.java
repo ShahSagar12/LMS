@@ -1,6 +1,10 @@
 package com.lms.serviceimpl;
 
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -10,6 +14,7 @@ import com.lms.dao.UserDAO;
 import com.lms.daoimpl.RoleDAOImpl;
 import com.lms.daoimpl.UserDAOImpl;
 import com.lms.entity.User;
+import com.lms.model.BookRequest;
 import com.lms.service.UserService;
 
 public class UserServiceImpl implements UserService {
@@ -54,6 +59,56 @@ public class UserServiceImpl implements UserService {
 	public User getByEmail(String email) throws SQLException {
 		
 		return userDao.getByEmail(email);
+	}
+
+	@Override
+	public boolean update(User user) throws SQLException {
+		
+		return userDao.update(user);
+	}
+
+	@Override
+	public boolean delete(int id) throws SQLException {
+		
+		return userDao.delete(id);
+	}
+
+	@Override
+	public List<BookRequest> getBookOwnerByOfAdmin(int adminId) throws SQLException {
+		List<BookRequest> bookRequests=new ArrayList<>();
+		userDao.getBookOwnerByOfAdmin(adminId).parallelStream().forEach(bookRequestDtos->{
+			BookRequest bookRequest=new BookRequest();
+			try {
+				long remainingDays=bookRequestDtos.getBookTakenFor()-getDays(bookRequestDtos.getBookTakenAt());
+				bookRequest.setCalibratedFine(calibrateFine(remainingDays));
+				bookRequest.setRemainingDays(remainingDays);
+			} catch (ParseException e) {
+				LOGGER.info("Date cannot be Parsed");
+			}
+			bookRequest.setBookStatus(bookRequestDtos.getBookStatus());
+			bookRequest.setStudentName(bookRequestDtos.getStudentName());
+			bookRequest.setBookId(bookRequestDtos.getBookId());
+			bookRequest.setBookAuthor(bookRequestDtos.getBookAuthor());
+			bookRequest.setBookTitle(bookRequestDtos.getBookTitle());
+			bookRequest.setBookTakenAt(bookRequestDtos.getBookTakenAt());
+			bookRequest.setBookTakenFor(bookRequestDtos.getBookTakenFor());
+			bookRequests.add(bookRequest);
+		});
+		return bookRequests;
+	}
+	
+	public long getDays(String date) throws ParseException {
+		String replace = date.replace('-', '/');
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+		LocalDate localDate = LocalDate.parse(replace,formatter);
+		LocalDate secondDate = LocalDate.now();
+		Period period=Period.between(localDate, secondDate);
+		return period.getDays();
+	}
+	
+	private double calibrateFine(long remainingDays) {
+		double fine=remainingDays>0.0?0.0 :Math.abs(remainingDays)*0.25;
+		return fine;
 	}
 
 	
