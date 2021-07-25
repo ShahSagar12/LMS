@@ -144,7 +144,7 @@ public class UserDAOImpl implements UserDAO {
 	public List<BookRequestDtos> getBookOwnerByOfAdmin(int adminId) throws SQLException {
 		List<BookRequestDtos> list=new ArrayList<>();
 		Connection connection=MySqlConnector.connectToDB();
-		String sql="SELECT bu.bookstatus,bu.booktakenat,bu.booktakenfor,bu.id,bk.booktitle,bk.bookauthor,u.firstname,u.lastname FROM bookuser bu INNER JOIN book bk INNER JOIN user u on bu.userid=u.id and bu.bookid=bk.bookid";
+		String sql="SELECT bu.bookstatus,bu.booktakenat,bu.booktakenfor,bu.id,bk.booktitle,bk.bookauthor,u.firstname,u.lastname,bk.fine FROM bookuser bu INNER JOIN book bk INNER JOIN user u on bu.userid=u.id and bu.bookid=bk.bookid";
 		try {
 			PreparedStatement preparedStatement=connection.prepareStatement(sql);
 			ResultSet resultSet=preparedStatement.executeQuery();
@@ -157,6 +157,7 @@ public class UserDAOImpl implements UserDAO {
 				bookRequestDtos.setBookTakenFor(Integer.parseInt(resultSet.getString("booktakenfor")));
 				bookRequestDtos.setBookStatus(resultSet.getString("bookstatus"));
 				bookRequestDtos.setStudentName(resultSet.getString("firstname")+" "+resultSet.getString("lastname"));
+				bookRequestDtos.setFine(resultSet.getFloat("fine"));
 				list.add(bookRequestDtos);
 			}
 		} catch (Exception ex) {

@@ -19,7 +19,8 @@ public class Book {
 	private int nOfPages;
 	@JsonProperty("bookQty")
 	private int bookQty;
-	
+	@JsonProperty("fine")
+	private float fine;
 	@JsonIgnore
 	private int adminId;
 
@@ -36,6 +37,14 @@ public class Book {
 		this.bookId = bookId;
 	}
 
+	public float getFine() {
+		return fine;
+	}
+
+
+	public void setFine(float fine) {
+		this.fine = fine;
+	}
 
 	public String getBookTitle() {
 		return bookTitle;

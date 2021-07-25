@@ -9,6 +9,7 @@ public class BookRequestDtos {
 	private String bookTakenAt;
 	private int bookTakenFor;
 	private String bookStatus;
+	private float fine;
 	
 	public BookRequestDtos() {
 		// TODO Auto-generated constructor stub
@@ -24,6 +25,13 @@ public class BookRequestDtos {
 
 	public String getStudentName() {
 		return studentName;
+	}
+	public void setFine(float fine) {
+		this.fine = fine;
+	}
+
+	public float getFine() {
+		return this.fine;
 	}
 	public void setStudentName(String studentName) {
 		this.studentName = studentName;

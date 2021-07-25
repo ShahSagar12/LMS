@@ -80,8 +80,12 @@ public class UserServiceImpl implements UserService {
 			BookRequest bookRequest=new BookRequest();
 			try {
 				long remainingDays=bookRequestDtos.getBookTakenFor()-getDays(bookRequestDtos.getBookTakenAt());
-				bookRequest.setCalibratedFine(calibrateFine(remainingDays));
-				bookRequest.setRemainingDays(remainingDays);
+				if(bookRequestDtos.getBookStatus().equals("Onloan")) {
+					System.out.print("fine   "+bookRequestDtos.getFine());
+					bookRequest.setCalibratedFine(String.valueOf(calibrateFine(remainingDays,bookRequestDtos.getFine())));
+					bookRequest.setRemainingDays(remainingDays);	
+				}
+			
 			} catch (ParseException e) {
 				LOGGER.info("Date cannot be Parsed");
 			}
@@ -106,9 +110,9 @@ public class UserServiceImpl implements UserService {
 		return period.getDays();
 	}
 	
-	private double calibrateFine(long remainingDays) {
-		double fine=remainingDays>0.0?0.0 :Math.abs(remainingDays)*0.25;
-		return fine;
+	private float calibrateFine(long remainingDays,float fine) {
+		return remainingDays>0?0 :(Math.abs(remainingDays))*fine;
+		
 	}
 
 	

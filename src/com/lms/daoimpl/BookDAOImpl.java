@@ -21,7 +21,7 @@ public class BookDAOImpl implements BookDAO {
 	public boolean save(Book book) throws SQLException {
 		boolean saved=false;
 		Connection connection=MySqlConnector.connectToDB();
-		String sql="INSERT INTO book(booktitle,bookauthor,bookpublisher,publishedyear,totalpages,bookqty,adminid)VALUES(?,?,?,?,?,?,?)";
+		String sql="INSERT INTO book(booktitle,bookauthor,bookpublisher,publishedyear,totalpages,bookqty,adminid,fine)VALUES(?,?,?,?,?,?,?,?)";
 		try {
 			PreparedStatement preparedStatement=connection.prepareStatement(sql,PreparedStatement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1, book.getBookTitle());
@@ -31,6 +31,7 @@ public class BookDAOImpl implements BookDAO {
 			preparedStatement.setInt(5, book.getnOfPages());
 			preparedStatement.setInt(6, book.getBookQty());
 			preparedStatement.setInt(7, book.getAdminId());
+			preparedStatement.setFloat(8, book.getFine());
 			preparedStatement.executeUpdate();
 			ResultSet rs = preparedStatement.getGeneratedKeys();
 	        if (rs.next()) {
@@ -63,6 +64,7 @@ public class BookDAOImpl implements BookDAO {
 				book.setnOfPages(resultSet.getInt("totalpages"));
 				book.setBookQty(resultSet.getInt("bookqty"));
 				book.setAdminId(resultSet.getInt("adminid"));
+				book.setFine(resultSet.getFloat("fine"));
 				list.add(book);
 			}
 		} catch (Exception ex) {
@@ -92,6 +94,7 @@ public class BookDAOImpl implements BookDAO {
 				book.setBookQty(resultSet.getInt("bookqty"));
 				book.setnOfPages(resultSet.getInt("totalpages"));
 				book.setAdminId(resultSet.getInt("adminid"));
+				book.setFine(resultSet.getFloat("fine"));
 			}
 		} catch (Exception ex) {
 			LOGGER.info("Error getting book by id "+ex.getMessage());
@@ -120,6 +123,7 @@ public class BookDAOImpl implements BookDAO {
 				book.setBookQty(resultSet.getInt("bookqty"));
 				book.setnOfPages(resultSet.getInt("totalpages"));
 				book.setAdminId(resultSet.getInt("adminid"));
+				book.setFine(resultSet.getFloat("fine"));
 			}
 		} catch (Exception ex) {
 			LOGGER.info("Error getting book by booktitle "+ex.getMessage());
@@ -133,7 +137,7 @@ public class BookDAOImpl implements BookDAO {
 	public boolean update(Book book) throws SQLException {
 		boolean exists=false;
 		Connection connection=MySqlConnector.connectToDB();
-		String sql="UPDATE book SET booktitle=?, bookauthor=?, bookpublisher=?, publishedyear=?,bookqty=?,totalpages=? where bookid="+book.getBookId();
+		String sql="UPDATE book SET booktitle=?, bookauthor=?, bookpublisher=?, publishedyear=?,bookqty=?,totalpages=?,fine=? where bookid="+book.getBookId();
 		try {
 			PreparedStatement preparedStatement=connection.prepareStatement(sql);
 			preparedStatement.setString(1, book.getBookTitle());
@@ -142,6 +146,7 @@ public class BookDAOImpl implements BookDAO {
 			preparedStatement.setString(4, book.getPublishedYear());
 			preparedStatement.setInt(5, book.getBookQty());
 			preparedStatement.setInt(6, book.getnOfPages());
+			preparedStatement.setFloat(7, book.getFine());
 			preparedStatement.executeUpdate();
 			exists=true;
 		}catch(Exception ex) {
@@ -174,13 +179,14 @@ public class BookDAOImpl implements BookDAO {
 	public List<BookOwned> getBookOwnedByUser(int userId) throws SQLException {
 		List<BookOwned> list=new ArrayList<>();
 		Connection connection=MySqlConnector.connectToDB();
-		String sql="SELECT bu.id,bu.bookid,bu.bookstatus,bu.booktakenat,bu.booktakenfor,bk.booktitle,bk.bookauthor FROM bookuser bu INNER JOIN book bk on bu.bookid=bk.bookid WHERE bu.userid="+userId;
+		String sql="SELECT bu.id,bu.bookid,bu.bookstatus,bu.booktakenat,bu.booktakenfor,bk.booktitle,bk.bookauthor,bk.fine FROM bookuser bu INNER JOIN book bk on bu.bookid=bk.bookid WHERE bu.userid="+userId;
 		try {
 			PreparedStatement preparedStatement=connection.prepareStatement(sql);
 			ResultSet resultSet=preparedStatement.executeQuery();
 			while(resultSet.next()) {
 				BookOwned bookowned=new BookOwned();
 				bookowned.setId(resultSet.getInt("id"));
+				bookowned.setFine(resultSet.getFloat("fine"));
 				bookowned.setBookId(resultSet.getInt("bookid"));
 				bookowned.setBookTitle(resultSet.getString("booktitle"));
 				bookowned.setBookAuthor(resultSet.getString("bookauthor"));

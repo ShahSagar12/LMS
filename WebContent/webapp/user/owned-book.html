@@ -147,7 +147,7 @@
 						<h5 class="modal-title" id="exampleModalLabel">Return Book</h5>
 					</div>
 					<div class="modal-body">						
-					<label for="inputEmail3" >Are you sure you ant to return this book?</label>
+					<label for="inputEmail3" >Are you sure you want to return this book?</label>
 					</div>
 					<div class="modal-footer">
 						<input type="hidden" id="book-id" />
@@ -228,8 +228,8 @@
 						$("<td/>").html(book.bookTakenAt).appendTo($tr);
 						$("<td/>").html(book.bookTakenFor).appendTo($tr);
 						$("<td/>").html(book.bookOwnedStatus).appendTo($tr);
-						$("<td/>").html(book.remainingDays).appendTo($tr);
-						$("<td/>").html(book.fineCalibrated).appendTo($tr);
+						$("<td/>").html(book.bookOwnedStatus=="Onloan"?book.remainingDays:"N/A").appendTo($tr);
+						$("<td/>").html(book.bookOwnedStatus=="Onloan"?("£ "+book.fineCalibrated):"N/A").appendTo($tr);
 						$tr.on("click", function() {
 							$this = $(this);
 							populateBook($this.attr('data-id'),book.bookOwnedStatus,book.bookUserId);

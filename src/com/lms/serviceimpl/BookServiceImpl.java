@@ -60,8 +60,12 @@ public class BookServiceImpl implements BookService{
 			BookOwnedDto bookOwnedDto=new BookOwnedDto();
 			try {
 				Long remainingDays=bookowned.getBookTakenFor()-getDays(bookowned.getBookTakenAt());
-				bookOwnedDto.setFineCalibrated(String.valueOf(calibrateFine(remainingDays)));
-				bookOwnedDto.setRemainingDays(remainingDays);
+				if(bookowned.getBookOwnedStatus().equals("Onloan")) {
+					System.out.print("fine   "+bookowned.getFine());
+					bookOwnedDto.setFineCalibrated(String.valueOf(calibrateFine(remainingDays,bookowned.getFine())));
+					bookOwnedDto.setRemainingDays(remainingDays);	
+				}
+				
 			} catch (ParseException e) {
 				LOGGER.info("Date cannot be Parsed");
 			}
@@ -87,9 +91,9 @@ public class BookServiceImpl implements BookService{
 		return period.getDays();
 	}
 	
-	private long calibrateFine(long remainingDays) {
-		double fine=remainingDays>0.0?0.0 :Math.abs(remainingDays)*0.25;
-		return (long) fine;
+	private float calibrateFine(long remainingDays,float fine) {
+		return remainingDays>0?0 :(Math.abs(remainingDays))*fine;
+		
 	}
 
 	@Override

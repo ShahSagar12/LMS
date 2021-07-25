@@ -166,7 +166,12 @@
 								<input type="number" class="form-control" id="add-book-qty">
 							</div>
 						</div>
-
+                         <div class="row mb-3">
+							<label for="no-Of-Pages" class="col-sm-2 col-form-label">Fine</label>
+							<div class="col-sm-10">
+								<input type="number" class="form-control" id="fine">
+							</div>
+						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary"
 								data-bs-dismiss="modal">Close</button>
@@ -261,6 +266,7 @@
 		var publishedYear=$('#add-published-year').val();
 		var noOfPages=$('#add-no-Of-Pages').val();
 		var bookQty=$('#add-book-qty').val();
+		var fine=$('#fine').val();
 		if(!bookTitle){
 			alert("title is required");
 			return false;
@@ -286,6 +292,10 @@
 			alert("quantity is required");
 			return false;
 		}
+		else if(!fine){
+			alert("fine is required");
+			return false;
+		}
 		var formdata = {
 			bookTitle :bookTitle,
 			bookAuthor :bookAuthor,
@@ -293,6 +303,7 @@
 			publishedYear : publishedYear,
 			noOfPages : noOfPages,
 			bookQty:bookQty,
+			fine:fine
 		};
 		$.ajax({
 			type : "POST",

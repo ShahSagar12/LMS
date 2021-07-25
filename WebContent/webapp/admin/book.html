@@ -81,7 +81,7 @@
 					class="fas fa-fw fa-tachometer-alt"></i> <span>Dashboard</span>
 			</a></li>
 			<li class="nav-item "><a class="nav-link"
-				href="admin-dashboard.html" role="button" aria-expanded="false">
+				role="button" aria-expanded="false">
 					<i class="fas fa-fw fa-folder"></i> <span>User</span>
 			</a></li>
 			<li class="nav-item dropdown"><a
@@ -118,6 +118,7 @@
 								<th>Book Author</th>
 								<th>Book Publisher</th>
 								<th>Published Year</th>
+								<th>Fine</th>
 								<th>Book Quantity</th>
 							</tr>
 						</table>
@@ -209,7 +210,14 @@
 							</div>
 						</div>
 					
-							
+							<div class="row mb-3">
+							<label for="book-quantity" class="col-sm-2 col-form-label">Fine
+								</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" id="fine">
+							</div>
+						</div>
+					
 					</div>
 					<div class="modal-footer">
 						<input type="hidden" id="book-id" />
@@ -297,6 +305,7 @@
 										.appendTo($tr);
 								$("<td/>").html(book.publisher).appendTo($tr);
 								$("<td/>").html(book.publishedYear).appendTo($tr);
+								$("<td/>").html(book.fine).appendTo($tr);
 								$("<td/>").html(book.bookQty).appendTo($tr);
 								$tr.on("click", function() {
 									$this = $(this);
@@ -321,25 +330,15 @@
 				headers: { 'user-info':  localStorage.getItem("userInfo")},
 				success : function(data) {
 					console.log(data);
-					var bookStatus = "book-status-";
-					if (data.bookStatusType === "Onloan") {
-						bookStatus += "loan";
-					}
-					if (data.bookStatusType === "Onrequested") {
-						bookStatus += "requested";
-					}
-					if (data.bookStatusType === "Onshelf") {
-						bookStatus += "shelf";
-					}
 					$("#book-title").val(data.bookTitle);
 					$("#book-author").val(data.bookAuthor);
 					$("#book-quantity").val(data.bookQty);
+					$("#fine").val(data.fine);
 					$("#book-publisher").val(data.publisher);
 					$("#published-year").val(data.publishedYear);
 					$("#no-Of-Pages").val(data.nOfPages);
 					$("#book-publisher").val(data.publisher);
 					$("#book-id").val(data.bookId);
-					$("#" + bookStatus).prop("checked", data.bookStatusType);
 					$("#book-dialog").modal('show');
 		
 				},
@@ -380,6 +379,7 @@
 		var publishedYear=$('#published-year').val();
 		var noOfPages=$('#no-Of-Pages').val();
 		var bookQty=$('#book-quantity').val();
+		var fine=$("#fine").val(data.fine);
 		if(!bookTitle){
 			alert("title is required");
 			return false;
@@ -405,6 +405,10 @@
 			alert("quantity is required");
 			return false;
 		}
+		else if(!fine){
+			alert("fine is required");
+			return false;
+		}
 		var formdata = {
 			bookTitle :bookTitle,
 			bookAuthor :bookAuthor,
@@ -412,7 +416,8 @@
 			publishedYear : publishedYear,
 			noOfPages : noOfPages,
 			bookQty:bookQty,
-			bookId:$('#book-id').val()
+			bookId:$('#book-id').val(),
+			fine:fine
 		};
 		$.ajax({
 			type : "PUT",

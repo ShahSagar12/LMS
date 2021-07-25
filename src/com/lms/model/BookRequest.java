@@ -10,7 +10,7 @@ public class BookRequest {
 	private int bookTakenFor;
 	private String bookStatus;
 	private Long remainingDays;
-	private double calibratedFine;
+	private String calibratedFine;
 	
 	public BookRequest() {
 	
@@ -66,15 +66,15 @@ public class BookRequest {
 	public void setRemainingDays(Long remainingDays) {
 		this.remainingDays = remainingDays;
 	}
-	public double getCalibratedFine() {
+	public String getCalibratedFine() {
 		return calibratedFine;
 	}
-	public void setCalibratedFine(double d) {
+	public void setCalibratedFine(String d) {
 		this.calibratedFine = d;
 	}
 	
 	public BookRequest(int bookUserId, String studentName, String bookTitle, String bookAuthor, String bookTakenAt,
-			int bookTakenFor, String bookStatus, Long remainingDays, double calibratedFine) {
+			int bookTakenFor, String bookStatus, Long remainingDays, String calibratedFine) {
 		this.bookUserId = bookUserId;
 		this.studentName = studentName;
 		this.bookTitle = bookTitle;
@@ -93,4 +93,6 @@ public class BookRequest {
 				+ ", bookStatus=" + bookStatus + ", remainingDays=" + remainingDays + ", calibratedFine="
 				+ calibratedFine + "]";
 	}
+
+	
 }

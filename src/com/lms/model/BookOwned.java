@@ -9,6 +9,7 @@ public class BookOwned {
 	private String bookTitle;
 	private String bookAuthor;
 	private String bookOwnedStatus;
+	private float fine;
 	
 	public BookOwned() {
 		
@@ -21,6 +22,14 @@ public class BookOwned {
 	public void setId(int id) {
 		this.id = id;
 	}
+	public float getFine() {
+		return fine;
+	}
+
+	public void setFine(float fine) {
+		this.fine = fine;
+	}
+
 	public String getBookOwnedStatus() {
 		return bookOwnedStatus;
 	}

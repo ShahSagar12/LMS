@@ -240,8 +240,8 @@
         								.appendTo($tr);
         						$("<td/>").html(data.bookTakenAt).appendTo($tr);
         						$("<td/>").html(data.bookTakenFor).appendTo($tr);
-        						$("<td/>").html(data.remainingDays).appendTo($tr);
-        						$("<td/>").html(data.calibratedFine).appendTo($tr);
+        						$("<td/>").html(data.bookStatus=="Onloan"?data.remainingDays:"N/A").appendTo($tr);
+        						$("<td/>").html(data.bookStatus=="Onloan"?("£ "+data.calibratedFine):"N/A").appendTo($tr);
         						$("<td/>").html(data.bookStatus).appendTo($tr);
         						$tr.on("click", function() {
         							$this = $(this);
