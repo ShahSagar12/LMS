@@ -305,7 +305,7 @@
 										.appendTo($tr);
 								$("<td/>").html(book.publisher).appendTo($tr);
 								$("<td/>").html(book.publishedYear).appendTo($tr);
-								$("<td/>").html(book.fine).appendTo($tr);
+								$("<td/>").html("£ "+book.fine).appendTo($tr);
 								$("<td/>").html(book.bookQty).appendTo($tr);
 								$tr.on("click", function() {
 									$this = $(this);
@@ -379,7 +379,7 @@
 		var publishedYear=$('#published-year').val();
 		var noOfPages=$('#no-Of-Pages').val();
 		var bookQty=$('#book-quantity').val();
-		var fine=$("#fine").val(data.fine);
+		var fine=$("#fine").val();
 		if(!bookTitle){
 			alert("title is required");
 			return false;
