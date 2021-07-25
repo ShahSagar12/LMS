@@ -93,7 +93,7 @@ public class BookUserDAOImpl implements BookUserDAO{
 	public BookUser getByUserIdAndBook(int userId,int bookId) throws SQLException {
 		BookUser bookUser=null;
 		Connection connection=MySqlConnector.connectToDB();
-		String sql="SELECT * FROM bookuser WHERE bookId=? and userId=?";
+		String sql="SELECT * FROM bookuser WHERE bookId=? and userId=? and bookStatus!='Shelf'";
 		try {
 			PreparedStatement preparedStatement=connection.prepareStatement(sql);
 			preparedStatement.setInt(1,bookId);

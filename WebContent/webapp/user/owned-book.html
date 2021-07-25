@@ -151,7 +151,8 @@
 					</div>
 					<div class="modal-footer">
 						<input type="hidden" id="book-id" />
-						<button type="button" class="btn btn-secondary"
+						<input type="hidden" id="book-user-id" />
+						<button type="submit" class="btn btn-secondary"
 							data-bs-dismiss="modal">Close</button>
 						<button type="button" class="btn btn-primary" id="btn-return">Return</button>
 					</div>
@@ -231,7 +232,7 @@
 						$("<td/>").html(book.fineCalibrated).appendTo($tr);
 						$tr.on("click", function() {
 							$this = $(this);
-							populateBook($this.attr('data-id'));
+							populateBook($this.attr('data-id'),book.bookOwnedStatus,book.bookUserId);
 						});
 						$tr.appendTo($table);
 
@@ -257,7 +258,7 @@
 			$("#return-book-dialog").modal('hide');
 			$.ajax({
 				type : "POST",
-				url : baseUrl +"return/book?book-id="+bookId,
+				url : baseUrl +"return/book?book-id="+bookId+"&bookUserId="+$('#book-user-id').val(),
 				contentType : "application/json",
 				headers: { 'user-info': localStorage.getItem("userInfo") },
 				dataType : "json",
@@ -268,6 +269,7 @@
 						icon : "success",
 						timer : 1000
 					});
+					setTimeout(loadPage, 1000);
 				},
 				error : function(e) {
 					swal({
@@ -284,16 +286,32 @@
 				}
 			});
 		});
-	function populateBook(id) {
+	function loadPage(){
+		location.reload();
+	}
+	function populateBook(id,status,bookUserId) {
+		if(status=='Onloan'){
 			$.ajax({
-					type : "GET",
-					url : baseUrl+"books/all?id="+id,
-					headers: { 'user-info': localStorage.getItem("userInfo") },
-					success : function(data) {
-						$("#book-id").val(data.bookId);
-						$("#return-book-dialog").modal('show');
-					},
-			});	
+				type : "GET",
+				url : baseUrl+"books/all?id="+id,
+				headers: { 'user-info': localStorage.getItem("userInfo") },
+				success : function(data) {
+					$("#book-id").val(data.bookId);
+					$("#book-user-id").val(bookUserId);
+					$("#return-book-dialog").modal('show');
+				},
+		});	
+		}
+		else{
+			swal({
+				text : "Book should be Onloan status to return.",
+				button : "ok",
+				icon : "warning",
+				timer : 1000
+			});
+			
+		}
+				
 	}
 	
 	

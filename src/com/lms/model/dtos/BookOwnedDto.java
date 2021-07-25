@@ -1,6 +1,7 @@
 package com.lms.model.dtos;
 
 public class BookOwnedDto {
+	private int bookUserId;
 	private int bookId;
 	private int userId;
 	private String bookTitle;
@@ -19,6 +20,12 @@ public class BookOwnedDto {
 	}
 	public void setBookId(int bookId) {
 		this.bookId = bookId;
+	}
+	public int getBookUserId() {
+		return bookUserId;
+	}
+	public void setBookUserId(int bookUserId) {
+		this.bookUserId = bookUserId;
 	}
 	public String getBookOwnedStatus() {
 		return bookOwnedStatus;

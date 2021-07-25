@@ -37,7 +37,8 @@ public class BookReturnController extends HttpServlet{
 			BookService bookService=new BookServiceImpl();
 			ObjectMapper mapper = new ObjectMapper();
 			int parameterValues = req.getParameter("book-id")==null?0:Integer.parseInt(req.getParameter("book-id"));
-			BookUser bookUser = bookUserService.get(parameterValues);
+			int bookUserId = req.getParameter("bookUserId")==null?0:Integer.parseInt(req.getParameter("bookUserId"));
+			BookUser bookUser = bookUserService.get(bookUserId);
 			bookUser.setBookStatus("Shelf");
 			Book book = bookService.get(parameterValues);
 			book.setBookQty(book.getBookQty()+1);
