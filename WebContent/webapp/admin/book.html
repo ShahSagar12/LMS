@@ -213,9 +213,9 @@
 					</div>
 					<div class="modal-footer">
 						<input type="hidden" id="book-id" />
-						<button type="submit" class="btn btn-secondary"
+						<button type="button" class="btn btn-secondary"
 							data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-danger" id="btn-delete" onclick=deleteBook()>Delete</button>
+						<button type="submit" class="btn btn-danger" id="btn-delete" onclick=deleteBook()>Delete</button>
 						<button type="button" class="btn btn-primary" id="btn-edit-save" onclick=saveChanges()>Save
 							Changes</button>
 					</div>
@@ -241,7 +241,7 @@
 				<div class="modal-footer">
 					<button class="btn btn-secondary" type="button"
 						data-dismiss="modal">Cancel</button>
-					<a class="btn btn-primary" href="/lms/logout" onclick=logout()>Logout</a>
+					<a class="btn btn-primary" onclick=logout()>Logout</a>
 				</div>
 			</div>
 		</div>
@@ -281,29 +281,34 @@
 	$(document).ready(
 			function() {
 				if(localStorage.getItem("userInfo")){
-					$.getJSON("/lms/books/all", function(data) {
-					console.log(data);
-					$table = $("#dataTable");
-					$.each(data, function(i, book) {
-						var $tr = $("<tr data-id='"+book.bookId+"'/>").css(
-								"cursor", "pointer");
-						$('<td style="display:none;"/>').html(book.bookId).appendTo($tr);
-						$("<td/>").html(book.bookTitle).appendTo($tr);
-						$("<td data-title='name'/>").html(book.bookAuthor)
-								.appendTo($tr);
-						$("<td/>").html(book.publisher).appendTo($tr);
-						$("<td/>").html(book.publishedYear).appendTo($tr);
-						$("<td/>").html(book.bookQty).appendTo($tr);
-						$tr.on("click", function() {
-							$this = $(this);
-							populateBook($this.attr('data-id'));
-						});
-						$tr.appendTo($table);
+					$.ajax({
+						type : "GET",
+						url : "/lms/books/all",
+						headers: { 'user-info':  localStorage.getItem("userInfo")},
+						success : function(data) {
+							console.log(data);
+							$table = $("#dataTable");
+							$.each(data, function(i, book) {
+								var $tr = $("<tr data-id='"+book.bookId+"'/>").css(
+										"cursor", "pointer");
+								$('<td style="display:none;"/>').html(book.bookId).appendTo($tr);
+								$("<td/>").html(book.bookTitle).appendTo($tr);
+								$("<td data-title='name'/>").html(book.bookAuthor)
+										.appendTo($tr);
+								$("<td/>").html(book.publisher).appendTo($tr);
+								$("<td/>").html(book.publishedYear).appendTo($tr);
+								$("<td/>").html(book.bookQty).appendTo($tr);
+								$tr.on("click", function() {
+									$this = $(this);
+									populateBook($this.attr('data-id'));
+								});
+								$tr.appendTo($table);
 
-					});
+							});
 
-				});
-				}
+						},
+					});	
+									}
 				else{
 					window.location.href="/lms";
 				}
@@ -313,6 +318,7 @@
 			$.ajax({
 				type : "GET",
 				url : "/lms/books/all?id="+id,
+				headers: { 'user-info':  localStorage.getItem("userInfo")},
 				success : function(data) {
 					console.log(data);
 					var bookStatus = "book-status-";
@@ -423,8 +429,8 @@
 					icon : icons,
 					timer : 1000
 				});
-				document.getElementById("bookForm").reset();
-			},
+				setTimeout(loadPage, 1000);
+				},
 			error : function(e) {
 				swal({
 					text : "Cannot Saved",
@@ -435,6 +441,9 @@
 			}
 
 		});
+	}
+	function loadPage(){
+		location.reload();
 	}
 	function myFunction() {
 

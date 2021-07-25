@@ -193,7 +193,7 @@
 							<label for="autoSizingSelect">Register As</label>
 							<select class="form-select" id="register-as">
 								<option value="Admin">Admin</option>
-								<option value="User" selected>User</option>
+								<option value="User">User</option>
 							</select>
 						</div>
 					</div>
@@ -202,7 +202,7 @@
 						<button type="button" class="btn btn-secondary"
 							data-bs-dismiss="modal">Close</button>
 						<button type="button" class="btn btn-danger" id="btn-delete">Delete</button>
-						<button type="button" class="btn btn-primary" id="btn-edit-user">Edit</button>
+						<button type="button" class="btn btn-primary" id="btn-edit-user">Update</button>
 					</div>
 				</form>
 			</div>
@@ -222,7 +222,7 @@
           <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="/lms/logout">Logout</a>
+            <a class="btn btn-primary" onclick="logout()">Logout</a>
           </div>
         </div>
       </div>
@@ -248,9 +248,13 @@
     <script src="../shared/js/demo/chart-area-demo.js"></script>
     <script type="text/javascript">
     var baseUrl = window.location.origin +"/lms/"
-    
+    function logout(){
+		localStorage.removeItem("userInfo");
+		window.location.href="/lms";
+	}
     $(document).ready(
     		function() {
+    			if(localStorage.getItem("userInfo")){
         		$.ajax({
     				type : "GET",
     				url : baseUrl +"/users/all",
@@ -281,7 +285,10 @@
     					});
     				}
 
-    			});
+    			});}
+    			else{
+    				window.location.href="/lms";
+    			}
 				/* $.getJSON(baseUrl+"/users/all", function(data) {
 					$table = $("#dataTable");
 					$.each(data, function(i, user) {
@@ -310,6 +317,7 @@
 		$.ajax({
 			type : "GET",
 			url : baseUrl +"/users/all?id="+id,
+			headers: { 'user-info':  localStorage.getItem("userInfo")},
 			success : function(data) {
 				$("#id").val(id);
 				$("#first-name").val(data.firstName);
@@ -356,13 +364,13 @@
 						icon : icons,
 						timer : 1000
 					});
-					document.getElementById("userForm").reset();
+					setTimeout(loadPage, 1000);
 				},
 				error : function(e) {
 					swal({
 						text : "Cannot Saved",
 						icon:"warning",
-						button : Ok,
+						button : "",
 						timer : 2000
 					});
 				}
@@ -371,7 +379,9 @@
 		
 	});
 	
-	
+	function loadPage(){
+		location.reload();
+	}
 	$('#btn-delete').on('click',function(){
 		$("#user-dialog").modal('hide');
 		var id=$('#id').val();
@@ -388,8 +398,9 @@
 						icon : icons,
 						timer : 1000
 					});
-					document.getElementById("userForm").reset();
-				},
+					setTimeout(loadPage, 1000);
+
+					},
 				error : function(e) {
 					swal({
 						text : "Cannot Saved",

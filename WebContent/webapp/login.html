@@ -70,19 +70,40 @@
 				data : JSON.stringify(formdata),
 				dataType : "json",
 				success : function(result) {
-					localStorage.setItem("userInfo",JSON.stringify(result));
-					if(result.role==="Admin"){
-						window.location.href="/lms/admin-dashboard";
+					if(!result.role){
+						swal({
+							text : "Wrong Credentials",
+							icon:"warning",
+							button : "OK",
+							timer : 2000
+						});
+						return false;
 					}
 					else{
-						window.location.href="/lms/student-dashboard";
+						localStorage.setItem("userInfo",JSON.stringify(result));
+						if(result.role==="Admin"){
+							window.location.href="/lms/admin-dashboard";
+						}
+						else if(result.role=="User"){
+							window.location.href="/lms/student-dashboard";
+						}
+						else{
+							swal({
+								text : "Wrong Credentials",
+								icon:"warning",
+								button : "OK",
+								timer : 2000
+							});
+
+						}
 					}
+					
 				},
 				error : function(e) {
 					swal({
 						text : "Wrong Credentials",
 						icon:"warning",
-						button : Ok,
+						button : "OK",
 						timer : 2000
 					});
 				}

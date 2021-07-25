@@ -207,14 +207,13 @@
 		window.location.href="/lms";
 	}
 	var baseUrl = window.location.origin +"/lms/";
-	userInfo=window.localStorage.getItem('userInfo');
 	$(document).ready(function() {
 		if(localStorage.getItem("userInfo")){
 			$.ajax({
 				type : "GET",
 				url : baseUrl+"books/owned",
 				contentType : "application/json",
-				headers: { 'userInfo': userInfo },
+				headers: { 'user-info': localStorage.getItem("userInfo") },
 				dataType : "json",
 				success : function(result) {
 					$table = $("#dataTable");
@@ -239,7 +238,7 @@
 				},
 				error : function(e) {
 					swal({
-						text : "Cannot Saved",
+						text : "Cannot Fetch",
 						icon:"warning",
 						button : "Ok",
 						timer : 2000

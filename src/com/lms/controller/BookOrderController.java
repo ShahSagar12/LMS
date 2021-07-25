@@ -40,7 +40,7 @@ public class BookOrderController extends HttpServlet{
 		BookUserService bookUserService=new BookUserServiceImpl();
 		BookService bookService=new BookServiceImpl();
 		ObjectMapper mapper = new ObjectMapper();
-		UserInfo userInfo = mapper.readValue(req.getHeader("userInfo"), UserInfo.class);
+		UserInfo userInfo = mapper.readValue(req.getHeader("user-info"), UserInfo.class);
 		BookOrderDto bookOrder = mapper.readValue(req.getInputStream(), BookOrderDto.class);
 		try {
 			BookUser bookOrderAlready=bookUserService.getByUserIdAndBook(userInfo.getId(), Integer.parseInt(bookOrder.getBookId()));

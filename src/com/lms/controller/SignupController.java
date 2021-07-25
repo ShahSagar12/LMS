@@ -74,8 +74,11 @@ public class SignupController extends HttpServlet{
 						retunResponse(resp, sr);
 					}
 				}
-				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Duplicate Email");
-				retunResponse(resp, sr);
+				else {
+					StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Duplicate Email");
+					retunResponse(resp, sr);	
+				}
+				
 			}
 		} catch (SQLException e) {
 			StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Error In Data");

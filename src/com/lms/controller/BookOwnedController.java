@@ -32,7 +32,7 @@ public class BookOwnedController extends HttpServlet{
 		if(!(req.getHeader("user-info").equals("null"))) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			UserInfo userInfo = mapper.readValue(req.getHeader("userInfo"), UserInfo.class);
+			UserInfo userInfo = mapper.readValue(req.getHeader("user-info"), UserInfo.class);
 			BookService bookService=new BookServiceImpl();
 			retunResponse(resp, bookService.getBookOwnedByUser(userInfo.getId()));
 		} catch (IOException | SQLException e) {

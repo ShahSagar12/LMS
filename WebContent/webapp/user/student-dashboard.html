@@ -273,23 +273,39 @@
 	$(document).ready(
 			function() {
 				if(localStorage.getItem("userInfo")){
-				$.getJSON(baseUrl+"books/all", function(data) {
-					$table = $("#dataTable");
-					$.each(data, function(i, book) {
-						var $tr = $("<tr data-id='"+book.bookId+"'/>").css(
-								"cursor", "pointer");
-						$("<td/>").html(book.bookTitle).appendTo($tr);
-						$("<td data-title='name'/>").html(book.bookAuthor)
-								.appendTo($tr);
-						$("<td/>").html(book.publisher).appendTo($tr);
-						$("<td/>").html(book.publishedYear).appendTo($tr);
-						$tr.on("click", function() {
-							$this = $(this);
-							populateBook($this.attr('data-id'));
-						});
-						$tr.appendTo($table);
+					$.ajax({
+						type : "GET",
+						url : baseUrl+ "books/all",
+						contentType : "application/json",
+						headers: { 'user-info': window.localStorage.getItem('userInfo')},
+						success : function(data) {
+							$table = $("#dataTable");
+							$.each(data, function(i, book) {
+								var $tr = $("<tr data-id='"+book.bookId+"'/>").css(
+										"cursor", "pointer");
+								$("<td/>").html(book.bookTitle).appendTo($tr);
+								$("<td data-title='name'/>").html(book.bookAuthor)
+										.appendTo($tr);
+								$("<td/>").html(book.publisher).appendTo($tr);
+								$("<td/>").html(book.publishedYear).appendTo($tr);
+								$tr.on("click", function() {
+									$this = $(this);
+									populateBook($this.attr('data-id'));
+								});
+								$tr.appendTo($table);
+							});
+						},
+						error : function(e) {
+							swal({
+								text : "Cannot Order",
+								icon : "warning",
+								button : Ok,
+								timer : 2000
+							});
+						}
+
 					});
-				});
+				
 				}
 				else{
 					window.location.href="/lms";
@@ -311,7 +327,7 @@
 										type : "POST",
 										url : baseUrl+ "order",
 										contentType : "application/json",
-										headers: { 'userInfo': window.localStorage.getItem('userInfo')},
+										headers: { 'user-info': window.localStorage.getItem('userInfo')},
 										data : JSON.stringify(formdata),
 										dataType : "json",
 										success : function(result) {
@@ -346,7 +362,7 @@
 							type : "PUT",
 							url : baseUrl+ "order",
 							contentType : "application/json",
-							headers: { 'userInfo': window.localStorage.getItem('userInfo')},
+							headers: { 'user-info': window.localStorage.getItem('userInfo')},
 							data : JSON.stringify(formeditdata),
 							dataType : "json",
 							success : function(result) {
@@ -376,30 +392,43 @@
 	
 	function populateBook(id) {
 		if(localStorage.getItem("userInfo")){
-		$.getJSON(baseUrl+"books/all", {
-			id : id
-		}, function(data) {
-			console.log(data);
-			var bookStatus = "book-status-";
-			if (data.bookStatusType === "Onloan") {
-				bookStatus += "loan";
-			}
-			if (data.bookStatusType === "Onrequested") {
-				bookStatus += "requested";
-			}
-			if (data.bookStatusType === "Onshelf") {
-				bookStatus += "shelf";
-			}
-			$("#book-title").val(data.bookTitle);
-			$("#book-author").val(data.bookAuthor);
-			$("#book-publisher").val(data.publisher);
-			$("#published-year").val(data.publishedYear);
-			$("#no-Of-Pages").val(data.nOfPages);
-			$("#book-publisher").val(data.publisher);
-			$("#book-id").val(data.bookId);
-			$("#" + bookStatus).prop("checked", data.bookStatusType);
-			$("#book-dialog").modal('show');
-		});
+			$.ajax({
+				type : "GET",
+				url : baseUrl+ "books/all?id="+id,
+				contentType : "application/json",
+				headers: { 'user-info': window.localStorage.getItem('userInfo')},
+				success : function(data) {
+					console.log(data);
+					var bookStatus = "book-status-";
+					if (data.bookStatusType === "Onloan") {
+						bookStatus += "loan";
+					}
+					if (data.bookStatusType === "Onrequested") {
+						bookStatus += "requested";
+					}
+					if (data.bookStatusType === "Onshelf") {
+						bookStatus += "shelf";
+					}
+					$("#book-title").val(data.bookTitle);
+					$("#book-author").val(data.bookAuthor);
+					$("#book-publisher").val(data.publisher);
+					$("#published-year").val(data.publishedYear);
+					$("#no-Of-Pages").val(data.nOfPages);
+					$("#book-publisher").val(data.publisher);
+					$("#book-id").val(data.bookId);
+					$("#" + bookStatus).prop("checked", data.bookStatusType);
+					$("#book-dialog").modal('show');
+				},
+				error : function(e) {
+					swal({
+						text : "Forbidden",
+						icon : "warning",
+						button : "ok",
+						timer : 2000
+					});
+				}
+
+			});
 		}
 		else{
 			window.location.href="/lms";

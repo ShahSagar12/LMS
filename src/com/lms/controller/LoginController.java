@@ -39,9 +39,12 @@ public class LoginController extends HttpServlet{
 		ObjectMapper mapper = new ObjectMapper();
 		CredentialsDto credentialsDto = mapper.readValue(req.getInputStream(), CredentialsDto.class);
 		User authenticatedUser = userService.isAuthenticated(credentialsDto.getEmail(), credentialsDto.getPassword());
-		if(authenticatedUser!=null) {
+		String role=RoleTypes.roles.get(authenticatedUser.getRoleid());
+		System.out.print("------bahira1--------- "+role);System.out.print("------bahira2--------- "+credentialsDto.getRole());
+		if(authenticatedUser!=null && role.equals(credentialsDto.getRole())) {
+			System.out.print("------CHIRO---------");
 			UserInfo userInfo=new UserInfo();
-			switch (RoleTypes.roles.get(authenticatedUser.getRoleid())) {
+			switch (role) {
 			case "Admin":
 				userInfo.setId(authenticatedUser.getId());
 				userInfo.setUsername(authenticatedUser.getFirstName()+" "+authenticatedUser.getLastName());
@@ -62,8 +65,10 @@ public class LoginController extends HttpServlet{
 				break;
 			}
 		}else {
-			StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Wrong Credentials");
+			System.out.print("---------------");
+			StandardResponse sr=new StandardResponse(HttpServletResponse.SC_FORBIDDEN, "Wrong Credentials");
 			retunResponse(resp, sr);
+			return;
 		}
 	}
 	
