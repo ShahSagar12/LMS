@@ -35,7 +35,11 @@ public class BookUserServiceImpl implements BookUserService {
 		
 		return bookUserDao.get(id);
 	}
-
+	@Override
+	public BookUser getByUserIdAndBook(int userId,int bookId) throws SQLException {
+		
+		return bookUserDao.getByUserIdAndBook(userId,bookId);
+	}
 	@Override
 	public boolean update(BookUser bookUser) throws SQLException {
 		

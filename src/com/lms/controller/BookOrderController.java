@@ -41,17 +41,23 @@ public class BookOrderController extends HttpServlet{
 		ObjectMapper mapper = new ObjectMapper();
 		UserInfo userInfo = mapper.readValue(req.getHeader("userInfo"), UserInfo.class);
 		BookOrderDto bookOrder = mapper.readValue(req.getInputStream(), BookOrderDto.class);
-		BookUser bookUser=new BookUser();
-		bookUser.setBookId(Integer.parseInt(bookOrder.getBookId()));
-		bookUser.setBookStatus(bookOrder.getBookStatus());
-		bookUser.setBookTakenFor(Integer.parseInt(bookOrder.getBookTakenFor()));
-		bookUser.setUserId(userInfo.getId());
-		
 		try {
+			BookUser bookOrderAlready=bookUserService.getByUserIdAndBook(userInfo.getId(), Integer.parseInt(bookOrder.getBookId()));
+			if(bookOrderAlready!=null) {
+				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_NOT_ACCEPTABLE, "This book has already been ordered");
+				retunResponse(resp, sr);
+				return;
+				
+		}
+			BookUser bookUser=new BookUser();
+			bookUser.setBookId(Integer.parseInt(bookOrder.getBookId()));
+			bookUser.setBookStatus(bookOrder.getBookStatus());
+			bookUser.setBookTakenFor(Integer.parseInt(bookOrder.getBookTakenFor()));
+			bookUser.setUserId(userInfo.getId());
 			Book book = bookService.get(Integer.parseInt(bookOrder.getBookId()));
 			book.setBookQty(book.getBookQty()-1);
 			if(bookUserService.save(bookUser) && bookService.update(book)) {
-				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_OK, "Saved Successfully");
+				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_OK, "Book Ordered Successfully");
 				retunResponse(resp, sr);
 			}else {
 				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Cannot Save Successfully");

@@ -38,7 +38,7 @@
       <!-- Navbar Search -->
       <form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+          <input type="text" class="form-control" placeholder="Search for..." id="myInput" onkeyup="myFunction()" aria-label="Search" aria-describedby="basic-addon2">
           <div class="input-group-append">
             <button class="btn btn-primary" type="button">
               <i class="fas fa-search"></i>
@@ -209,7 +209,7 @@
           <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="/lms/logout">Logout</a>
+            <a class="btn btn-primary" onclick=logout()>Logout</a>
           </div>
         </div>
       </div>
@@ -234,10 +234,15 @@
     <script src="../shared/js/demo/datatables-demo.js"></script>
     <script src="../shared/js/demo/chart-area-demo.js"></script>
     <script type="text/javascript">
+    function logout(){
+		localStorage.removeItem("userInfo");
+		window.location.href="/lms";
+	}
     var baseUrl = window.location.origin +"/lms/"
     
     $(document).ready(
     		function() {
+    			if(localStorage.getItem("userInfo")){
         		$.ajax({
     				type : "GET",
     				url : baseUrl +"/users/all",
@@ -269,6 +274,10 @@
     				}
 
     			});
+    			}
+    			else{
+    				window.location.href="/lms";
+    			}
 				/* $.getJSON(baseUrl+"/users/all", function(data) {
 					$table = $("#dataTable");
 					$.each(data, function(i, user) {
@@ -307,7 +316,41 @@
 		
 	
 }
-    
+    function myFunction() {
+
+		  // Declare variables 
+		  var input = document.getElementById("myInput");
+		  var filter = input.value.toUpperCase();
+		  var table = document.getElementById("dataTable");
+		  var trs = table.tBodies[0].getElementsByTagName("tr");
+
+		  // Loop through first tbody's rows
+		  for (var i = 1; i < trs.length; i++) {
+
+		    // define the row's cells
+		    var tds = trs[i].getElementsByTagName("td");
+
+		    // hide the row
+		    trs[i].style.display = "none";
+
+		    // loop through row cells
+		    for (var i2 = 0; i2 < tds.length; i2++) {
+
+		      // if there's a match
+		      if (tds[i2].innerHTML.toUpperCase().indexOf(filter) > -1) {
+
+		        // show the row
+		        trs[i].style.display = "";
+
+		        // skip to the next row
+		        continue;
+
+		      }
+		    }
+		  }
+
+		}
+
     
     </script>
 

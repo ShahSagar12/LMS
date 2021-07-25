@@ -212,7 +212,7 @@
 				<div class="modal-footer">
 					<button class="btn btn-secondary" type="button"
 						data-dismiss="modal">Cancel</button>
-					<a class="btn btn-primary" href="/lms/logout">Logout</a>
+					<a class="btn btn-primary" onclick=logout()>Logout</a>
 				</div>
 			</div>
 		</div>
@@ -239,6 +239,14 @@
 		src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 
 	<script type="text/javascript">
+	var baseUrl = window.location.origin +"/lms/";
+	function logout(){
+		localStorage.removeItem("userInfo");
+		window.location.href="/lms";
+	}
+	if(!localStorage.getItem("userInfo")){
+		window.location.href="/lms";
+	}
 	var baseUrl = window.location.origin +"/lms/";
 	
 	$('#btn-save-newbook').on('click', function() {

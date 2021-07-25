@@ -87,7 +87,31 @@ public class BookUserDAOImpl implements BookUserDAO{
 		}
 		return bookUser;
 	}
-
+	@Override
+	public BookUser getByUserIdAndBook(int userId,int bookId) throws SQLException {
+		BookUser bookUser=null;
+		Connection connection=MySqlConnector.connectToDB();
+		String sql="SELECT * FROM bookuser WHERE bookId=? and userId=?";
+		try {
+			PreparedStatement preparedStatement=connection.prepareStatement(sql);
+			preparedStatement.setInt(1,bookId);
+			preparedStatement.setInt(2,userId);
+			ResultSet resultSet=preparedStatement.executeQuery();
+			while(resultSet.next()) {
+				bookUser=new BookUser();
+				bookUser.setId(resultSet.getInt("id"));
+				bookUser.setBookId(resultSet.getInt("bookid"));
+				bookUser.setUserId(Integer.parseInt(resultSet.getString("userid")));
+				bookUser.setBookTakenAt(resultSet.getString("booktakenat"));
+				bookUser.setBookTakenFor(Integer.parseInt(resultSet.getString("booktakenfor")));
+			}
+		} catch (Exception ex) {
+			LOGGER.info("Error getting order by id and userId"+ex.getMessage());
+		}finally {
+			connection.close();
+		}
+		return bookUser;
+	}
 	@Override
 	public boolean update(BookUser bookUser) throws SQLException {
 		boolean exists=false;

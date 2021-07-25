@@ -51,7 +51,7 @@ public class AdminController extends HttpServlet{
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
-				StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_OK, "Unable to delete");
+				StandardResponse standardResponse=new StandardResponse(HttpServletResponse.SC_BAD_REQUEST, "Unable to delete");
 				retunResponse(resp, standardResponse);
 				// TODO Auto-generated catch block
 			}
@@ -60,9 +60,6 @@ public class AdminController extends HttpServlet{
 	
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		    
-		System.out.println("okayyyyyyyy--")	;
-		System.out.print(false);
 		ObjectMapper mapper = new ObjectMapper();
 		UserInfo userInfo = mapper.readValue(req.getHeader("user-info"), UserInfo.class);
 		System.out.println(userInfo);

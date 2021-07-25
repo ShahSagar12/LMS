@@ -46,7 +46,7 @@
 		<form
 			class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0">
 			<div class="input-group">
-				<input type="text" class="form-control" placeholder="Search for..."
+				<input type="text" class="form-control" placeholder="Search for..." id="myInput" onkeyup="myFunction()"
 					aria-label="Search" aria-describedby="basic-addon2">
 				<div class="input-group-append">
 					<button class="btn btn-primary" type="button">
@@ -262,7 +262,7 @@
 				<div class="modal-footer">
 					<button class="btn btn-secondary" type="button"
 						data-dismiss="modal">Cancel</button>
-					<a class="btn btn-primary" href="/lms/logout">Logout</a>
+					<a class="btn btn-primary" onclick=logout()>Logout</a>
 				</div>
 			</div>
 		</div>
@@ -283,9 +283,14 @@
 	<script src="../shared/js/sb-admin.min.js"></script>
 	
 	<script type="text/javascript">
+	function logout(){
+		localStorage.removeItem("userInfo");
+		window.location.href="/lms";
+	}
 	var baseUrl = window.location.origin + "/lms/";
 	$(document).ready(
 			function() {
+				if(localStorage.getItem("userInfo")){
 				$.getJSON(baseUrl+"books/all", function(data) {
 					$table = $("#dataTable");
 					$.each(data, function(i, book) {
@@ -303,14 +308,22 @@
 						$tr.appendTo($table);
 					});
 				});
-				
+				}
+				else{
+					window.location.href="/lms";
+				}
 				//Order Book Function
 				
 				$('#btn-submit-ch').on('click',function() {
+					var bookTakenFor=$('#take-book-for').val();
+					if(!bookTakenFor){
+						alert("book taken for must not be null");
+						return false;
+					}
 							 var formdata = {
 								bookId : $("#book-id").val(),
 								bookStatus : $("input[type='radio'][name='book-status']:checked").val(),
-								bookTakenFor:$('#take-book-for').val()
+								bookTakenFor:bookTakenFor
 							};
 							$.ajax({
 										type : "POST",
@@ -344,6 +357,7 @@
 			});
 	
 	function populateBook(id) {
+		if(localStorage.getItem("userInfo")){
 		$.getJSON(baseUrl+"books/all", {
 			id : id
 		}, function(data) {
@@ -368,7 +382,46 @@
 			$("#" + bookStatus).prop("checked", data.bookStatusType);
 			$("#book-dialog").modal('show');
 		});
+		}
+		else{
+			window.location.href="/lms";
+		}
 	}
+	function myFunction() {
+
+		  // Declare variables 
+		  var input = document.getElementById("myInput");
+		  var filter = input.value.toUpperCase();
+		  var table = document.getElementById("dataTable");
+		  var trs = table.tBodies[0].getElementsByTagName("tr");
+
+		  // Loop through first tbody's rows
+		  for (var i = 1; i < trs.length; i++) {
+
+		    // define the row's cells
+		    var tds = trs[i].getElementsByTagName("td");
+
+		    // hide the row
+		    trs[i].style.display = "none";
+
+		    // loop through row cells
+		    for (var i2 = 0; i2 < tds.length; i2++) {
+
+		      // if there's a match
+		      if (tds[i2].innerHTML.toUpperCase().indexOf(filter) > -1) {
+
+		        // show the row
+		        trs[i].style.display = "";
+
+		        // skip to the next row
+		        continue;
+
+		      }
+		    }
+		  }
+
+		}
+
 	</script>
 </body>
 </html>
