@@ -11,9 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.lms.entity.Book;
 import com.lms.entity.BookUser;
 import com.lms.model.response.StandardResponse;
+import com.lms.service.BookService;
 import com.lms.service.BookUserService;
+import com.lms.serviceimpl.BookServiceImpl;
 import com.lms.serviceimpl.BookUserServiceImpl;
 
 @WebServlet("/bookrequest/accept")
@@ -27,7 +30,10 @@ public class AdminAcceptController extends HttpServlet{
 		try {
 			BookUser bu=bookUserService.get(bookUserId);
 			bu.setBookStatus("Onloan");
-			if(bookUserService.update(bu)) {
+			BookService bookService=new BookServiceImpl();
+			Book book = bookService.get(bu.getBookId());
+			book.setBookQty(book.getBookQty()-1);
+			if(bookUserService.update(bu) && bookService.update(book)) {
 				StandardResponse sr=new StandardResponse(HttpServletResponse.SC_OK,"Accepted Successfully");
 				retunResponse(resp, sr);
 			}else {
